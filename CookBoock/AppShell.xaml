@@ -5,10 +5,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:CookBoock"
     Shell.FlyoutBehavior="Disabled">
-
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
-
+    <TabBar>
+        <Tab Title="Favorite" Icon="favorite.png">
+            <ShellContent ContentTemplate="{DataTemplate local:Favorites}"/>
+        </Tab>
+        <Tab x:Name="Home" Title="Home" Icon="home.png">
+            <ShellContent
+            Title="Home"
+            ContentTemplate="{DataTemplate local:MainPage}"
+            Route="MainPage" />
+        </Tab>
+        <Tab Title="Shop List" Icon="list.png">
+            <ShellContent ContentTemplate="{DataTemplate local:ShopList}"/>
+        </Tab>
+    </TabBar>
 </Shell>
