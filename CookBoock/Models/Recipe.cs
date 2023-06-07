@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,12 +11,14 @@ namespace CookBoock.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string[] Ingridients { get; set; }
+        public ObservableCollection<Ingridients> Ingridients { get; set; }
         public string CookingProcess { get; set; }
 
-        public Recipe() { }
+        public Recipe() {
+            Ingridients = new ObservableCollection<Ingridients>();
+        }
 
-        public Recipe(string name, string[] ingridients, string cookingProcess)
+        public Recipe(string name, ObservableCollection<Ingridients> ingridients, string cookingProcess)
         {
             Name = name;
             Ingridients = ingridients;

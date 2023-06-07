@@ -7,6 +7,7 @@ namespace CookBoock;
 public partial class RecipePage : ContentPage
 {
     private RecipeDB Db;
+    private int id;
 
     public RecipePage()
 	{
@@ -30,10 +31,10 @@ public partial class RecipePage : ContentPage
     private void SetContent(Recipe recipe)
     {
         Label label = new Label();
-        for (int i = 0; i < recipe.Ingridients.Length; i++)
+        for (int i = 0; i < recipe.Ingridients.Count; i++)
         {
             label = new Label();
-            label.Text = recipe.Ingridients[i];
+            label.Text = recipe.Ingridients[i].Ingridient;
             MainContent.Add(label);
         }
         label = new Label(); 
@@ -46,8 +47,8 @@ public partial class RecipePage : ContentPage
     {
         try
         {
-            int id = Convert.ToInt32(itemId);
-            var recipe = Db.Recipes.FindOne(x => x.Id == id);
+            id = Convert.ToInt32(itemId);
+            var recipe = Db.FindeById(id);
             SetContent(recipe);
             BindingContext = recipe;
         }
@@ -55,5 +56,16 @@ public partial class RecipePage : ContentPage
         {
             Console.WriteLine("Failed to load recipe.");
         }
+    }
+
+    private async void Delete(object sender, EventArgs e)
+    {
+        Db.DeleteById(id);
+        await Shell.Current.GoToAsync("..");
+    }
+
+    private void Rewrite(object sender, EventArgs e)
+    {
+        
     }
 }

@@ -54,16 +54,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="AddPage.xaml">
+	  <MauiXaml Update="View\AddPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Favorites.xaml">
+	  <MauiXaml Update="View\Favorites.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="RecipePage.xaml">
+	  <MauiXaml Update="View\RecipePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="ShopList.xaml">
+	  <MauiXaml Update="View\ShopList.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

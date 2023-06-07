@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CookBoock.AddPage"
+             Title="AddPage">
+    <ScrollView>
+        <VerticalStackLayout>
+            <Label Text="Название" FontSize="Large"/>
+            <Entry Text="{Binding name}"/>
+            <VerticalStackLayout>
+                <HorizontalStackLayout >
+                    <Label Text="Ингридиенты" FontSize="Large"/>
+                    <Button Text="+" Command="{Binding ingridientAdd}"/>
+                    <Button Text="-" Command="{Binding ingridientRemove}"/>
+                </HorizontalStackLayout>
+                <CollectionView x:Name="Ingridients" 
+                            SelectionMode="None"
+                            ItemsSource="{Binding ingridients}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Entry Text="{Binding Ingridient}"/>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+            <Label Text="Рецепт" FontSize="Large"/>
+            <Editor Text="{Binding cookingProcess}" AutoSize="TextChanges"/>
+            <HorizontalStackLayout>
+                <Button Text="Сохранить" Command="{Binding saveData}" Clicked="GoBack"/>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

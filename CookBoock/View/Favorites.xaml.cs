@@ -17,12 +17,12 @@ public partial class Favorites : ContentPage
     {
         base.OnAppearing();
         Db = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
-        RecipeList.ItemsSource = Db.Recipes.FindAll();
+        RecipeList.ItemsSource = Db.GetAll();
     }
 
     private async void Add(object sender, EventArgs e)
     {
-        Db.Db.Dispose();
+        Db.Close();
 		await Navigation.PushAsync(new AddPage());
     }
 
