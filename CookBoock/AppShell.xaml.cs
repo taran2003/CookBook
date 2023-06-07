@@ -6,5 +6,6 @@ public partial class AppShell : Shell
 	{
 		InitializeComponent();
 		CurrentItem = (ShellItem)Home;
-	}
+        Routing.RegisterRoute(nameof(RecipePage), typeof(RecipePage));
+    }
 }
