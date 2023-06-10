@@ -1,5 +1,6 @@
 using CookBoock.Data;
 using CookBoock.Models;
+using CookBoock.ViewModel;
 using Microsoft.Maui.Controls;
 
 
@@ -7,8 +8,6 @@ namespace CookBoock;
 
 public partial class Favorites : ContentPage
 {
-    private RecipeDB Db;
-
     public Favorites()
 	{
 		InitializeComponent();
@@ -16,13 +15,11 @@ public partial class Favorites : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        Db = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
-        RecipeList.ItemsSource = Db.GetAll();
+        BindingContext = new FavoritesViewModel();
     }
 
     private async void Add(object sender, EventArgs e)
     {
-        Db.Close();
 		await Navigation.PushAsync(new AddPage());
     }
 

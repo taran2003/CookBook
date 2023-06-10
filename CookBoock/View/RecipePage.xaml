@@ -4,10 +4,22 @@
              x:Class="CookBoock.RecipePage"
              Title="{Binding Name}">
     <ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="trash.png" Clicked="Delete"/>
+        <ToolbarItem IconImageSource="trash.png" Command="{Binding Delete}" Clicked="GoBack"/>
         <ToolbarItem IconImageSource="pen" Clicked="Rewrite"/>
     </ContentPage.ToolbarItems>
     <VerticalStackLayout x:Name="MainContent">
-        
+        <CollectionView x:Name="Ingridients" 
+                            SelectionMode="None"
+                            ItemsSource="{Binding Ingridients}">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Label Text="{Binding Ingridient}"/>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Label Text="{Binding CookingProcess}"/>
     </VerticalStackLayout>
 </ContentPage>

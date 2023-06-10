@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CookBoock.Models;
+﻿using CookBoock.Models;
 using LiteDB;
 
 namespace CookBoock.Data
@@ -11,11 +6,14 @@ namespace CookBoock.Data
     class RecipeDB
     {
         private LiteDatabase Db;
+        private ILiteStorage<string> Fs;
         private ILiteCollection<Recipe> Recipes;
+        private LiteFileStream<string> ImageStream;
 
         public RecipeDB(string dbPath)
         { 
             Db = new LiteDatabase("Filename="+dbPath+";Upgrate=true");
+            Fs = Db.FileStorage;
             Recipes = Db.GetCollection<Recipe>();
         }
 
@@ -29,14 +27,21 @@ namespace CookBoock.Data
             return Recipes.FindAll();
         }
 
-        public void Add(Recipe recipe)
+        public void Add(Recipe recipe, string filePath)
         {
             Recipes.Insert(recipe);
+            Fs.Upload(recipe.FileId, filePath);
         }
 
         public Recipe FindeById(int id)
         {
             return Recipes.FindOne(x => x.Id == id);
+        }
+
+        public LiteFileStream<string> ImageFindById(string id)
+        {
+            ImageStream = Fs.OpenRead(id);
+            return ImageStream;
         }
 
         public void DeleteById(int id)

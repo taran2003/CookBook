@@ -51,6 +51,7 @@
 	<ItemGroup>
 		<PackageReference Include="LiteDB" Version="5.0.16" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="Xamarin.MediaGallery" Version="2.2.1" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -66,6 +67,24 @@
 	  <MauiXaml Update="View\ShopList.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0-android'">
+	  <PackageReference Include="Xamarin.MediaGallery.Permision.Maui">
+	    <Version>2.2.1</Version>
+	  </PackageReference>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0-ios'">
+	  <PackageReference Include="Xamarin.MediaGallery.Permision.Maui">
+	    <Version>2.2.1</Version>
+	  </PackageReference>
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net7.0-maccatalyst'">
+	  <PackageReference Include="Xamarin.MediaGallery.Permision.Maui">
+	    <Version>2.2.1</Version>
+	  </PackageReference>
 	</ItemGroup>
 
 </Project>

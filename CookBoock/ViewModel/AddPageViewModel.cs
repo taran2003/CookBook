@@ -1,27 +1,34 @@
 ﻿using CookBoock.Data;
 using CookBoock.Models;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
-using static Java.Util.Jar.Attributes;
 
-namespace CookBoock
+namespace CookBoock.ViewModel
 {
-    internal class AddPageViewModel : INotifyPropertyChanged
+    public class AddPageViewModel : INotifyPropertyChanged
     {
         private RecipeDB Db;
         Recipe recipe;
         public ICommand ingridientAdd { get; set; }
-        public ICommand ingridientRemove { get; set; }
+        public ICommand IngridientRemoveCommand { get; set; }
         public ICommand saveData { get; set; }
+        public ICommand ImageLoad { get; set; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        private string image;
+        public string Image 
+        { 
+            get => image;
+            set 
+            {
+                if (image != value)
+                {
+                    image = value;
+                    OnPropertyChanged();
+                }
+            } 
+        }
         
         public string name
         {
@@ -69,23 +76,37 @@ namespace CookBoock
             {
                 ingridients.Add(new Ingridients());
             });
-            ingridientRemove = new Command(() =>
-            {
-                if (ingridients.Count > 0)
-                {
-                    ingridients.RemoveAt(ingridients.Count - 1);
-                }
-            });
+
+            IngridientRemoveCommand = new Command<Ingridients>(RemoveIngridient);
+
             saveData = new Command(() =>
             {
-                Db.Add(recipe);
+                Db.Add(recipe,Image);
                 Db.Close();
             });
+            ImageLoad = new Command(async () => {
+                var result = await FilePicker.PickAsync(new PickOptions
+                {
+                    FileTypes = FilePickerFileType.Images
+                    
+                });
+                if (result != null)
+                {
+                    Image = result.FullPath;
+                }
+            });
+        }
+
+        private void RemoveIngridient(Ingridients obj)
+        {
+            ingridients.Remove(obj);
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+        
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

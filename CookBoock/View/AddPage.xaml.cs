@@ -1,12 +1,11 @@
 using CookBoock.Models;
 using CookBoock.Data;
+using CookBoock.ViewModel;
 
 namespace CookBoock;
 
 public partial class AddPage : ContentPage
 {
-    private AddPageViewModel model;
-
 	public AddPage()
 	{
         InitializeComponent();
@@ -16,7 +15,6 @@ public partial class AddPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        
     }
 
     private async void GoBack(object sender, EventArgs e)

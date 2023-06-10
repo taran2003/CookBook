@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CookBoock
+namespace CookBoock.Models
 {
-    class Ingridients : INotifyPropertyChanged
+    public class Ingridients : INotifyPropertyChanged
     {
         private string ingridient;
         public string Ingridient

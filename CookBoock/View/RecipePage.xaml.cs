@@ -1,14 +1,12 @@
 using CookBoock.Data;
 using CookBoock.Models;
+using CookBoock.ViewModel;
 
 namespace CookBoock;
 
 [QueryProperty(nameof(ItemId), "ItemId")]
 public partial class RecipePage : ContentPage
 {
-    private RecipeDB Db;
-    private int id;
-
     public RecipePage()
 	{
 		InitializeComponent();
@@ -17,50 +15,17 @@ public partial class RecipePage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        BindingContext = new RecipePageViewModel(ItemId);
     }
 
     public string ItemId
     {
-        set
-        {
-            Db = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
-            LoadRecipe(value);
-        }
+        get;
+        set;
     }
 
-    private void SetContent(Recipe recipe)
+    private async void GoBack(object sender, EventArgs e)
     {
-        Label label = new Label();
-        for (int i = 0; i < recipe.Ingridients.Count; i++)
-        {
-            label = new Label();
-            label.Text = recipe.Ingridients[i].Ingridient;
-            MainContent.Add(label);
-        }
-        label = new Label(); 
-        label.Text = recipe.CookingProcess;
-        MainContent.Add(label);
-
-    }
-
-    void LoadRecipe(string itemId)
-    {
-        try
-        {
-            id = Convert.ToInt32(itemId);
-            var recipe = Db.FindeById(id);
-            SetContent(recipe);
-            BindingContext = recipe;
-        }
-        catch (Exception)
-        {
-            Console.WriteLine("Failed to load recipe.");
-        }
-    }
-
-    private async void Delete(object sender, EventArgs e)
-    {
-        Db.DeleteById(id);
         await Shell.Current.GoToAsync("..");
     }
 
