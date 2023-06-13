@@ -3,23 +3,29 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CookBoock.RecipePage"
              Title="{Binding Name}">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IconOverride="back.png"/>
+    </Shell.BackButtonBehavior>
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="trash.png" Command="{Binding Delete}" Clicked="GoBack"/>
-        <ToolbarItem IconImageSource="pen" Clicked="Rewrite"/>
+        <ToolbarItem IconImageSource="pencil.png" Clicked="Rewrite"/>
     </ContentPage.ToolbarItems>
-    <VerticalStackLayout x:Name="MainContent">
-        <CollectionView x:Name="Ingridients" 
+    <ScrollView>
+        <VerticalStackLayout x:Name="MainContent">
+            <Image Source="{Binding Image}"/>
+            <CollectionView x:Name="Ingridients" 
                             SelectionMode="None"
                             ItemsSource="{Binding Ingridients}">
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Vertical"/>
-            </CollectionView.ItemsLayout>
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Label Text="{Binding Ingridient}"/>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-        <Label Text="{Binding CookingProcess}"/>
-    </VerticalStackLayout>
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Label Text="{Binding Ingridient}"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+            <Label Text="{Binding CookingProcess}"/>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

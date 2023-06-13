@@ -11,6 +11,7 @@ public partial class Favorites : ContentPage
     public Favorites()
 	{
 		InitializeComponent();
+        
     }
     protected override void OnAppearing()
     {
@@ -20,7 +21,7 @@ public partial class Favorites : ContentPage
 
     private async void Add(object sender, EventArgs e)
     {
-		await Navigation.PushAsync(new AddPage());
+        await Navigation.PushAsync(new AddPage());
     }
 
     private async void RecipeListSelected(object sender, SelectionChangedEventArgs e)

@@ -1,6 +1,7 @@
 using CookBoock.Models;
 using CookBoock.Data;
 using CookBoock.ViewModel;
+using System.Reflection.Metadata;
 
 namespace CookBoock;
 
@@ -10,7 +11,7 @@ public partial class AddPage : ContentPage
 	{
         InitializeComponent();
         BindingContext = new AddPageViewModel();
-	}
+    }
 
     protected override void OnAppearing()
     {

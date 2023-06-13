@@ -45,6 +45,12 @@ namespace CookBoock.ViewModel
                 SetProperty(ref cookingProcess, value);
             }
         }
+        private ImageSource image;
+        public ImageSource Image
+        {
+            get => image;
+            set { SetProperty(ref image, value); }
+        }
 
         public RecipePageViewModel(string id)
         {
@@ -54,6 +60,7 @@ namespace CookBoock.ViewModel
             name = recipe.Name;
             Ingridients = recipe.Ingridients;
             cookingProcess = recipe.CookingProcess;
+            image = Db.GetImage(recipe.FileId);
             Delete = new Command(() =>
             {
                 Db.DeleteById(Id);

@@ -22,15 +22,20 @@ namespace CookBoock.Data
             Db.Dispose();
         }
 
-        public IEnumerable<Recipe> GetAll()
+        public List<Recipe> GetAll()
         {
-            return Recipes.FindAll();
+            List<Recipe> res  = Recipes.FindAll().ToList();
+            for (int i = 0; i < res.Count(); i++)
+            {
+                res[i].Image = GetImage(res[i].FileId);
+            }
+            return res;
         }
 
-        public void Add(Recipe recipe, string filePath)
+        public void Add(Recipe recipe, Stream stream)
         {
             Recipes.Insert(recipe);
-            Fs.Upload(recipe.FileId, filePath);
+            Fs.Upload(recipe.FileId, Guid.NewGuid().ToString(), stream);
         }
 
         public Recipe FindeById(int id)
@@ -38,7 +43,17 @@ namespace CookBoock.Data
             return Recipes.FindOne(x => x.Id == id);
         }
 
-        public LiteFileStream<string> ImageFindById(string id)
+        public ImageSource GetImage(string uuid)
+        {
+            var stream = FindImageById(uuid);
+            byte[] data = new byte[stream.Length];
+            stream.Read(data, 0, (int)stream.Length - 1);
+            stream.Dispose();
+            return ImageSource.FromStream(() => new MemoryStream(data));
+            //return null;  
+        }
+
+        public LiteFileStream<string> FindImageById(string id)
         {
             ImageStream = Fs.OpenRead(id);
             return ImageStream;
@@ -46,6 +61,8 @@ namespace CookBoock.Data
 
         public void DeleteById(int id)
         {
+            var recipe = FindeById(id);
+            Fs.Delete(recipe.FileId);
             Recipes.Delete(id);
         } 
     }

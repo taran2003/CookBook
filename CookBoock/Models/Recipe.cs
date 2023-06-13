@@ -8,11 +8,15 @@ namespace CookBoock.Models
         public string Name { get; set; }
         public ObservableCollection<Ingridients> Ingridients { get; set; }
         public string CookingProcess { get; set; }
-
-        public string FileId;
+        public string FileId { get; set; }
+        public ImageSource Image { get; set; }
 
         public Recipe() {
             Ingridients = new ObservableCollection<Ingridients>();
+        }
+
+        public void SetFileId()
+        {
             FileId = Guid.NewGuid().ToString();
         }
 

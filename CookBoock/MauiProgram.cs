@@ -1,4 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Android.App;
+using Android.Content;
+using Android.OS;
+using Microsoft.Extensions.Logging;
+using Microsoft.Maui.LifecycleEvents;
+using CommunityToolkit.Maui;
 
 namespace CookBoock;
 
@@ -8,15 +13,40 @@ public static class MauiProgram
 	{
 		var builder = MauiApp.CreateBuilder();
 		builder
-			.UseMauiApp<App>()
-			.ConfigureFonts(fonts =>
+            .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
+            .ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-			});
+			})
+			.ConfigureLifecycleEvents(events =>
+            {
+#if ANDROID
+				events.AddAndroid(android => android
+                .OnActivityResult((activity, requestCode, resultCode, data) => OnActivityResult(requestCode, resultCode, data))
+                .OnPostCreate((activity, bundle) => OnCreate(activity, bundle)));
+#endif
+                static void OnActivityResult(int requestCode, Result resultCode, Intent intent)
+                {
+                    if (NativeMedia.Platform.CheckCanProcessResult(requestCode, resultCode, intent))
+                        NativeMedia.Platform.OnActivityResult(requestCode, resultCode, intent);
+                }
+
+                static void OnCreate(Activity activity, Bundle savedInstanceState)
+                {
+                    NativeMedia.Platform.Init(activity, savedInstanceState);
+                }
+            })
+            .ConfigureMauiHandlers(handlers =>
+            {
+#if ANDROID
+                handlers.AddHandler(typeof(Shell), typeof(CookBoock.Platforms.CustomShellRenderer));
+#endif
+            });
 
 #if DEBUG
-		builder.Logging.AddDebug();
+        builder.Logging.AddDebug();
 #endif
 
 		return builder.Build();

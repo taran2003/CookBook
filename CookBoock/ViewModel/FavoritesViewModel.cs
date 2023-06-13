@@ -4,12 +4,14 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using static Android.Content.ClipData;
 
 namespace CookBoock.ViewModel
 {
     class FavoritesViewModel : INotifyPropertyChanged
     {
         public ICommand ColoseDb { get; set; }
+        public ICommand DeleteItem { get; set; }
         private RecipeDB Db;
         private ObservableCollection<Recipe> recipesList;
         public ObservableCollection<Recipe> RecipesList
@@ -29,6 +31,19 @@ namespace CookBoock.ViewModel
             {
                 Db.Close();
             });
+            DeleteItem = new Command<Recipe>((Recipe Item) =>
+            {
+                RecipesList.Remove(Item);
+                OnPropertyChanged();
+                Db.DeleteById(Item.Id);
+            });
+        }
+
+        private void Delete(Recipe Item)
+        {
+            RecipesList.Remove(RecipesList[Item.Id]);
+            OnPropertyChanged();
+            Db.DeleteById(Item.Id);
         }
 
         bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)

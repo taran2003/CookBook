@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using NativeMedia;
 
 namespace CookBoock.ViewModel
 {
@@ -15,9 +16,8 @@ namespace CookBoock.ViewModel
         public ICommand IngridientRemoveCommand { get; set; }
         public ICommand saveData { get; set; }
         public ICommand ImageLoad { get; set; }
-
-        private string image;
-        public string Image 
+        private ImageSource image;
+        public ImageSource Image 
         { 
             get => image;
             set 
@@ -29,7 +29,6 @@ namespace CookBoock.ViewModel
                 }
             } 
         }
-        
         public string name
         {
             get => recipe.Name;
@@ -41,7 +40,6 @@ namespace CookBoock.ViewModel
                 }
             }
         }
-
         public string cookingProcess
         {
             get => recipe.CookingProcess;
@@ -54,6 +52,9 @@ namespace CookBoock.ViewModel
                 }
             }
         }
+        CancellationTokenSource cts = new CancellationTokenSource();
+        IMediaFile[] files = null;
+        Stream stream { get; set; }
 
         public ObservableCollection<Ingridients> ingridients
         {
@@ -72,29 +73,52 @@ namespace CookBoock.ViewModel
         {
             Db = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
             recipe = new Recipe();
+            stream = null;
             ingridientAdd = new Command(()=>
             {
                 ingridients.Add(new Ingridients());
             });
-
             IngridientRemoveCommand = new Command<Ingridients>(RemoveIngridient);
+            saveData = new Command(Save);
+            ImageLoad = new Command(SetImage);
+        }
 
-            saveData = new Command(() =>
+        private async void Save()
+        {
+            recipe.SetFileId();
+            stream = await files[0].OpenReadAsync();
+            Db.Add(recipe, stream);
+            Db.Close();
+        }
+
+        private async void SetImage()
+        {
+            try
             {
-                Db.Add(recipe,Image);
-                Db.Close();
-            });
-            ImageLoad = new Command(async () => {
-                var result = await FilePicker.PickAsync(new PickOptions
-                {
-                    FileTypes = FilePickerFileType.Images
-                    
-                });
-                if (result != null)
-                {
-                    Image = result.FullPath;
-                }
-            });
+                var res = await MediaGallery.PickAsync(1, MediaFileType.Image);
+                files = res?.Files?.ToArray();
+            }
+            catch (OperationCanceledException)
+            {
+                files = null;
+            }
+            catch (Exception)
+            {
+                files = null;
+            }
+            finally
+            {
+                cts.Dispose();
+            }
+            if (files == null || files.Length == 0)
+            {
+                cts.Dispose();
+                return; 
+            }
+            stream = await files[0].OpenReadAsync();
+            ImageSource c =
+            Image = null;
+            Image = ImageSource.FromStream(() => stream);
         }
 
         private void RemoveIngridient(Ingridients obj)
