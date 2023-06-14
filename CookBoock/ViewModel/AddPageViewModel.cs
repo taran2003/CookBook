@@ -12,10 +12,12 @@ namespace CookBoock.ViewModel
     {
         private RecipeDB Db;
         Recipe recipe;
+        int Id { get; set; }
         public ICommand ingridientAdd { get; set; }
         public ICommand IngridientRemoveCommand { get; set; }
         public ICommand saveData { get; set; }
         public ICommand ImageLoad { get; set; }
+        Stream stream { get; set; }
         private ImageSource image;
         public ImageSource Image 
         { 
@@ -54,8 +56,6 @@ namespace CookBoock.ViewModel
         }
         CancellationTokenSource cts = new CancellationTokenSource();
         IMediaFile[] files = null;
-        Stream stream { get; set; }
-
         public ObservableCollection<Ingridients> ingridients
         {
             get => recipe.Ingridients;
@@ -83,11 +83,43 @@ namespace CookBoock.ViewModel
             ImageLoad = new Command(SetImage);
         }
 
+        public AddPageViewModel(string id)
+        {
+            Id = Convert.ToInt32(id);
+            Db = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
+            recipe = Db.FindeById(Id);
+            Image = Db.GetImage(recipe.FileId);
+            stream = null;
+            ingridientAdd = new Command(() =>
+            {
+                ingridients.Add(new Ingridients());
+            });
+            IngridientRemoveCommand = new Command<Ingridients>(RemoveIngridient);
+            saveData = new Command(Update);
+            ImageLoad = new Command(SetImage);
+        }
+
         private async void Save()
         {
             recipe.SetFileId();
             stream = await files[0].OpenReadAsync();
             Db.Add(recipe, stream);
+            stream.Close();
+            Db.Close();
+        }
+
+        private async void Update()
+        {
+            if (files == null)
+            {
+                stream = Db.GetStream(recipe.FileId);
+            }
+            else
+            { 
+                stream = await files[0].OpenReadAsync();
+            }
+            Db.Update(recipe, stream);
+            stream.Close();
             Db.Close();
         }
 

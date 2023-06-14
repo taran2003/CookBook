@@ -25,9 +25,33 @@ namespace CookBoock.Data
         public List<Recipe> GetAll()
         {
             List<Recipe> res  = Recipes.FindAll().ToList();
-            for (int i = 0; i < res.Count(); i++)
+            Thread threadOne;
+            Thread threadTwo;
+            threadOne = new Thread(() => {
+                for (int i = 0; i < res.Count() / 2; i++)
+                {
+                    res[i].Image = GetImage(res[i].FileId);
+                }
+            });
+            threadTwo = new Thread(() =>
             {
-                res[i].Image = GetImage(res[i].FileId);
+                for (int i = res.Count() / 2; i < res.Count(); i++)
+                {
+                    res[i].Image = GetImage(res[i].FileId);
+                }
+            });
+            threadOne.Start();
+            threadTwo.Start();
+            threadOne.Join();
+            threadTwo.Join();
+            var imageManagerDiskCache = Path.Combine(FileSystem.CacheDirectory, "image_manager_disk_cache");
+
+            if (Directory.Exists(imageManagerDiskCache))
+            {
+                foreach (var imageCacheFile in Directory.EnumerateFiles(imageManagerDiskCache))
+                {
+                    File.Delete(imageCacheFile);
+                }
             }
             return res;
         }
@@ -35,6 +59,12 @@ namespace CookBoock.Data
         public void Add(Recipe recipe, Stream stream)
         {
             Recipes.Insert(recipe);
+            Fs.Upload(recipe.FileId, Guid.NewGuid().ToString(), stream);
+        }
+
+        public void Update(Recipe recipe, Stream stream)
+        {
+            Recipes.Update(recipe);
             Fs.Upload(recipe.FileId, Guid.NewGuid().ToString(), stream);
         }
 
@@ -48,8 +78,18 @@ namespace CookBoock.Data
             var stream = FindImageById(uuid);
             byte[] data = new byte[stream.Length];
             stream.Read(data, 0, (int)stream.Length - 1);
-            stream.Dispose();
+            stream.Close();
             return ImageSource.FromStream(() => new MemoryStream(data));
+            //return null;  
+        }
+
+        public MemoryStream GetStream(string uuid)
+        {
+            var stream = FindImageById(uuid);
+            byte[] data = new byte[stream.Length];
+            stream.Read(data, 0, (int)stream.Length - 1);
+            stream.Dispose();
+            return new MemoryStream(data);
             //return null;  
         }
 

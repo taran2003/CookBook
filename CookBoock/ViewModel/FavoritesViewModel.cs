@@ -31,12 +31,7 @@ namespace CookBoock.ViewModel
             {
                 Db.Close();
             });
-            DeleteItem = new Command<Recipe>((Recipe Item) =>
-            {
-                RecipesList.Remove(Item);
-                OnPropertyChanged();
-                Db.DeleteById(Item.Id);
-            });
+            DeleteItem = new Command<Recipe>(Delete);
         }
 
         private void Delete(Recipe Item)

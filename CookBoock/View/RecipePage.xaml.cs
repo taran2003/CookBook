@@ -29,8 +29,8 @@ public partial class RecipePage : ContentPage
         await Shell.Current.GoToAsync("..");
     }
 
-    private void Rewrite(object sender, EventArgs e)
+    private async void GoAddPage(object sender, EventArgs e)
     {
-        
+        await Shell.Current.GoToAsync($"AddPage?ItemId={ItemId}");
     }
 }

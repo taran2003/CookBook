@@ -34,7 +34,6 @@
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:Ingridients">
-                            
                             <Grid
                                 Margin="0,10,0,0" 
                                 ColumnDefinitions="*,Auto">

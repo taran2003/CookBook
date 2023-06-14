@@ -18,6 +18,7 @@ namespace CookBoock.ViewModel
         private RecipeDB Db;
         private Recipe recipe;
         public ICommand Delete {get; set;}
+        public ICommand Rewrite { get; set;}
         private string name;
         public string Name
         {
@@ -65,6 +66,7 @@ namespace CookBoock.ViewModel
             {
                 Db.DeleteById(Id);
             });
+
         }
 
         bool SetProperty<T>(ref T storeg, T value, [CallerMemberName] string propertyNmae = null)
