@@ -1,14 +1,14 @@
-﻿using CookBoock.Data;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using CookBoock.Data;
 using CookBoock.Models;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
+using CookBoock.Helpers;
+using Mopups.Services;
+using CookBoock.View;
 
 namespace CookBoock.ViewModel
 {
@@ -17,8 +17,9 @@ namespace CookBoock.ViewModel
         private int Id;
         private RecipeDB Db;
         private Recipe recipe;
+        private Shell shell;
         public ICommand Delete {get; set;}
-        public ICommand Rewrite { get; set;}
+        public ICommand ToCart { get; set;}
         private string name;
         public string Name
         {
@@ -53,7 +54,7 @@ namespace CookBoock.ViewModel
             set { SetProperty(ref image, value); }
         }
 
-        public RecipePageViewModel(string id)
+        public RecipePageViewModel(string id, Shell shell)
         {
             Id = Convert.ToInt32(id);
             Db = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
@@ -62,11 +63,40 @@ namespace CookBoock.ViewModel
             Ingridients = recipe.Ingridients;
             cookingProcess = recipe.CookingProcess;
             image = Db.GetImage(recipe.FileId);
-            Delete = new Command(() =>
-            {
-                Db.DeleteById(Id);
-            });
+            Delete = new Command(Delite);
+            ToCart = new Command(AddToCart);
+            this.shell = shell;
+        }
 
+        public async void AddToCart()
+        {
+            recipe.AddToCart();
+            Db.Update(recipe);
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            string text = Constants.Texts.ToastAddToCart;
+            ToastDuration duration = ToastDuration.Short;
+            double fontSize = 14;
+            var toast = Toast.Make(text, duration, fontSize);
+            await toast.Show(cancellationTokenSource.Token);
+        }
+
+        public async void Delite()
+        {
+            await MopupService.Instance.PushAsync(new DeletePopUp());
+            MessagingCenter.Subscribe<DeletePopUpViewModel, bool>(this, "confirm", async (sender, arg) =>
+            {
+                if (arg)
+                {
+                    Db.DeleteById(Id);
+                    await shell.GoToAsync("..");
+                }
+            });
+            //bool answer = await Application.Current.MainPage.DisplayAlert("Удалить рецепт?", "", "Да", "Нет");
+            //if(answer) 
+            //{ 
+            //    Db.DeleteById(Id);
+            //    await shell.GoToAsync("..");
+            //}
         }
 
         bool SetProperty<T>(ref T storeg, T value, [CallerMemberName] string propertyNmae = null)

@@ -4,18 +4,24 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:CookBoock"
+    xmlns:helpers="clr-namespace:CookBoock.Helpers"
     Shell.FlyoutBehavior="Disabled">
+
     <TabBar>
-        <Tab Title="Избраное" Icon="favorite.png">
+        <Tab Title="{Static helpers:Constants+Texts.TitleFavorites}" 
+             Icon="{Static helpers:Constants+Images.FavoriteIcon}">
             <ShellContent ContentTemplate="{DataTemplate local:Favorites}"/>
         </Tab>
-        <Tab x:Name="Home" Title="Домашняя" Icon="home.png">
+        <Tab x:Name="Home" 
+             Title="{Static helpers:Constants+Texts.TitleMain}" 
+             Icon="{Static helpers:Constants+Images.HomeIcon}">
             <ShellContent
             Title="Home"
             ContentTemplate="{DataTemplate local:MainPage}"
             Route="MainPage" />
         </Tab>
-        <Tab Title="Корзина" Icon="list.png">
+        <Tab Title="{Static helpers:Constants+Texts.TitleCart}" 
+             Icon="{Static helpers:Constants+Images.ShopListIcon}">
             <ShellContent ContentTemplate="{DataTemplate local:ShopList}"/>
         </Tab>
     </TabBar>

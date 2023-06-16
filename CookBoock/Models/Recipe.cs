@@ -10,6 +10,7 @@ namespace CookBoock.Models
         public string CookingProcess { get; set; }
         public string FileId { get; set; }
         public ImageSource Image { get; set; }
+        public bool IsCart { get; set; }
 
         public Recipe() {
             Ingridients = new ObservableCollection<Ingridients>();
@@ -18,22 +19,36 @@ namespace CookBoock.Models
         public void SetFileId()
         {
             FileId = Guid.NewGuid().ToString();
+            IsCart = false;
         }
 
-        public Recipe(string name, ObservableCollection<Ingridients> ingridients, string cookingProcess)
+        public void AddToCart()
         {
-            Name = name;
-            Ingridients = ingridients;
-            CookingProcess = cookingProcess;
-            FileId = Guid.NewGuid().ToString();
+            IsCart = true;
         }
 
-        public Recipe(string name, ObservableCollection<Ingridients> ingridients, string cookingProcess, string fileId)
+        public void RemoveFromCart()
         {
-            Name = name;
-            Ingridients = ingridients;
-            CookingProcess = cookingProcess;
-            FileId = fileId;
+            IsCart = false;
         }
+
+        //public Recipe(string name, ObservableCollection<Ingridients> ingridients, string cookingProcess)
+        //{
+        //    Name = name;
+        //    Ingridients = ingridients;
+        //    CookingProcess = cookingProcess;
+        //    FileId = Guid.NewGuid().ToString();
+        //    IsCart = false;
+
+        //}
+
+        //public Recipe(string name, ObservableCollection<Ingridients> ingridients, string cookingProcess, string fileId)
+        //{
+        //    Name = name;
+        //    Ingridients = ingridients;
+        //    CookingProcess = cookingProcess;
+        //    FileId = fileId;
+        //    IsCart = false;
+        //}
     }
 }

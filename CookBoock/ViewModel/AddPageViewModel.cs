@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using NativeMedia;
+using Constants = CookBoock.Helpers.Constants;
 
 namespace CookBoock.ViewModel
 {
@@ -18,6 +19,17 @@ namespace CookBoock.ViewModel
         public ICommand saveData { get; set; }
         public ICommand ImageLoad { get; set; }
         Stream stream { get; set; }
+        public string title;
+        public string Title {
+            get => title;
+            set {
+                if (title != value)
+                {
+                    title = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         private ImageSource image;
         public ImageSource Image 
         { 
@@ -74,6 +86,7 @@ namespace CookBoock.ViewModel
             Db = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
             recipe = new Recipe();
             stream = null;
+            Title = Constants.Texts.TitleAdd;
             ingridientAdd = new Command(()=>
             {
                 ingridients.Add(new Ingridients());
@@ -90,6 +103,7 @@ namespace CookBoock.ViewModel
             recipe = Db.FindeById(Id);
             Image = Db.GetImage(recipe.FileId);
             stream = null;
+            Title = Constants.Texts.TitleRewrite;
             ingridientAdd = new Command(() =>
             {
                 ingridients.Add(new Ingridients());
@@ -118,7 +132,7 @@ namespace CookBoock.ViewModel
             { 
                 stream = await files[0].OpenReadAsync();
             }
-            Db.Update(recipe, stream);
+            Db.FullUpdate(recipe, stream);
             stream.Close();
             Db.Close();
         }

@@ -15,18 +15,13 @@ public partial class RecipePage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        BindingContext = new RecipePageViewModel(ItemId);
+        BindingContext = new RecipePageViewModel(ItemId,Shell.Current);
     }
 
     public string ItemId
     {
         get;
         set;
-    }
-
-    private async void GoBack(object sender, EventArgs e)
-    {
-        await Shell.Current.GoToAsync("..");
     }
 
     private async void GoAddPage(object sender, EventArgs e)

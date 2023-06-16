@@ -4,6 +4,7 @@ using Android.OS;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using CommunityToolkit.Maui;
+using Mopups.Hosting;
 
 namespace CookBoock;
 
@@ -15,6 +16,7 @@ public static class MauiProgram
 		builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
+            .ConfigureMopups()
             .ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

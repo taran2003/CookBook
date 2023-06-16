@@ -25,6 +25,39 @@ namespace CookBoock.Data
         public List<Recipe> GetAll()
         {
             List<Recipe> res  = Recipes.FindAll().ToList();
+            Parallel.For(0, res.Count(), (int i) =>
+            {
+                res[i].Image = GetImage(res[i].FileId);
+            });
+            ClearCashe();
+            return res;
+        }
+
+        public void Add(Recipe recipe, Stream stream)
+        {
+            Recipes.Insert(recipe);
+            Fs.Upload(recipe.FileId, Guid.NewGuid().ToString(), stream);
+        }
+
+        public void FullUpdate(Recipe recipe, Stream stream)
+        {
+            Recipes.Update(recipe);
+            Fs.Upload(recipe.FileId, Guid.NewGuid().ToString(), stream);
+        }
+
+        public void Update(Recipe recipe)
+        {
+            Recipes.Update(recipe);
+        }
+
+        public Recipe FindeById(int id)
+        {
+            return Recipes.FindOne(x => x.Id == id);
+        }
+
+        public List<Recipe> FindeAllByCart()
+        {
+            List<Recipe> res = Recipes.Find(x => x.IsCart == true).ToList();
             Thread threadOne;
             Thread threadTwo;
             threadOne = new Thread(() => {
@@ -44,33 +77,8 @@ namespace CookBoock.Data
             threadTwo.Start();
             threadOne.Join();
             threadTwo.Join();
-            var imageManagerDiskCache = Path.Combine(FileSystem.CacheDirectory, "image_manager_disk_cache");
-
-            if (Directory.Exists(imageManagerDiskCache))
-            {
-                foreach (var imageCacheFile in Directory.EnumerateFiles(imageManagerDiskCache))
-                {
-                    File.Delete(imageCacheFile);
-                }
-            }
+            ClearCashe();
             return res;
-        }
-
-        public void Add(Recipe recipe, Stream stream)
-        {
-            Recipes.Insert(recipe);
-            Fs.Upload(recipe.FileId, Guid.NewGuid().ToString(), stream);
-        }
-
-        public void Update(Recipe recipe, Stream stream)
-        {
-            Recipes.Update(recipe);
-            Fs.Upload(recipe.FileId, Guid.NewGuid().ToString(), stream);
-        }
-
-        public Recipe FindeById(int id)
-        {
-            return Recipes.FindOne(x => x.Id == id);
         }
 
         public ImageSource GetImage(string uuid)
@@ -97,6 +105,19 @@ namespace CookBoock.Data
         {
             ImageStream = Fs.OpenRead(id);
             return ImageStream;
+        }
+
+        private void ClearCashe()
+        {
+            var imageManagerDiskCache = Path.Combine(FileSystem.CacheDirectory, "image_manager_disk_cache");
+
+            if (Directory.Exists(imageManagerDiskCache))
+            {
+                foreach (var imageCacheFile in Directory.EnumerateFiles(imageManagerDiskCache))
+                {
+                    File.Delete(imageCacheFile);
+                }
+            }
         }
 
         public void DeleteById(int id)

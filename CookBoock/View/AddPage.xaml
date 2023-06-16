@@ -3,69 +3,78 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:CookBoock.ViewModel"
              xmlns:models="clr-namespace:CookBoock.Models"
+             xmlns:helpers="clr-namespace:CookBoock.Helpers"
              x:Class="CookBoock.AddPage"
              x:DataType="viewModels:AddPageViewModel"
-             Title="AddPage">
+             Title="{Binding Title}">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IconOverride="back.png"/>
     </Shell.BackButtonBehavior>
-    <ScrollView>
-        <VerticalStackLayout Margin="5,10">
-            <Label Text="Название" FontSize="Large"/>
-                <Border BackgroundColor="Transparent"
-                        Stroke="{StaticResource Gray300}"
+    <Border Margin="-5,-2">
+        <ScrollView>
+            <VerticalStackLayout Margin="5,10">
+                <Label Text="{Static helpers:Constants+Texts.LabelName}" FontSize="Large"/>
+                <Border Stroke="{StaticResource Gray300}"
                         StrokeShape="RoundRectangle 5">
-                   <Entry Text="{Binding name}" 
+                    <Entry Text="{Binding name}" 
                    Margin="0,0,0,0"
-                   Placeholder="Введите название рецепта"/>
+                   Placeholder="{Static helpers:Constants+Texts.PlaseHolderName}"/>
                 </Border>
                 <Image Source="{Binding Image}" Margin="0,10,0,0"/>
-            <Button Text="Загрузить изображение" Command="{Binding ImageLoad}" Margin="0,10,0,0"/>
-            <VerticalStackLayout Margin="0,10,0,0">
-                <HorizontalStackLayout >
-                    <Label Text="Ингридиенты" FontSize="Large"/>
-                    <Button Text="+" Command="{Binding ingridientAdd}" Margin="10,0,10,0"/>
-                </HorizontalStackLayout>
-                <CollectionView x:Name="Ingridients" 
+                <Button Text="{Static helpers:Constants+Texts.ButtonLoadImage}" 
+                        Command="{Binding ImageLoad}" 
+                        Margin="0,10,0,0"/>
+                <VerticalStackLayout Margin="0,10,0,0">
+                    <HorizontalStackLayout >
+                        <Label Text="{Static helpers:Constants+Texts.LabelIngridients}" 
+                               FontSize="Large"/>
+                        <ImageButton Source="{Static helpers:Constants+Images.PlusIcon}" 
+                                 HeightRequest="30"
+                                 WidthRequest="30"
+                                 Command="{Binding ingridientAdd}" 
+                                 Margin="10,0,10,0"/>
+                    </HorizontalStackLayout>
+                    <CollectionView x:Name="Ingridients" 
                             SelectionMode="None"
                             ItemsSource="{Binding ingridients}">
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Vertical"/>
-                    </CollectionView.ItemsLayout>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:Ingridients">
-                            <Grid
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Vertical"/>
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Ingridients">
+                                <Grid
                                 Margin="0,10,0,0" 
                                 ColumnDefinitions="*,Auto">
-                                <Border BackgroundColor="Transparent"
-                                        Stroke="{StaticResource Gray300}"
-                                        StrokeShape="RoundRectangle 5">
-                                    <Entry Text="{Binding Ingridient}" 
+                                    <Border StrokeShape="RoundRectangle 5">
+                                        <Entry Text="{Binding Ingridient}" 
                                        Grid.Column="0"
-                                       Placeholder="Ведите ингридиент"/>
-                                </Border>
-                                    <Button Text="-" Grid.Column="1"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:AddPageViewModel}}, 
-                                                          Path=IngridientRemoveCommand}"
-                                        CommandParameter="{Binding .}"/>
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </VerticalStackLayout>
-            <Label Text="Рецепт" FontSize="Large" Margin="0,10,0,0"/>
-            <Grid>
-                <Border BackgroundColor="Transparent"
-                        Stroke="{StaticResource Gray300}"
-                        StrokeShape="RoundRectangle 5">
-                    <Editor Text="{Binding cookingProcess}" 
+                                       Placeholder="{Static helpers:Constants+Texts.PlaseHolderIngridient}"/>
+                                    </Border>
+                                    <ImageButton Source="{Static helpers:Constants+Images.RemoveIcon}" 
+                                                 HeightRequest="45"
+                                                 WidthRequest="45"
+                                                 Grid.Column="1"
+                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:AddPageViewModel}}, 
+                                                                   Path=IngridientRemoveCommand}"
+                                                 CommandParameter="{Binding .}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+                <Label Text="{Static helpers:Constants+Texts.LabelRecipes}" 
+                       FontSize="Large" 
+                       Margin="0,10,0,0"/>
+                <Grid>
+                    <Border Stroke="{StaticResource Gray300}"
+                            StrokeShape="RoundRectangle 5">
+                        <Editor Text="{Binding cookingProcess}" 
                             AutoSize="TextChanges"
-                            Placeholder="Введите рецепт"/>
-                </Border>
-            </Grid>
-            <HorizontalStackLayout>
-                <Button Text="Сохранить" Command="{Binding saveData}" Clicked="GoBack"/>
-            </HorizontalStackLayout>
-        </VerticalStackLayout>
-    </ScrollView>
+                            Placeholder="{Static helpers:Constants+Texts.PlaseHolderRecipe}"/>
+                    </Border>
+                </Grid>
+                <Button Text="{Static helpers:Constants+Texts.ButtonSave}" Command="{Binding saveData}" Clicked="GoBack"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
 </ContentPage>
