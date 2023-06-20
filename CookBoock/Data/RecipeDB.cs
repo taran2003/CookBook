@@ -36,7 +36,15 @@ namespace CookBoock.Data
         public void Add(Recipe recipe, Stream stream)
         {
             Recipes.Insert(recipe);
+            recipe.ImageUrl = null;
             Fs.Upload(recipe.FileId, Guid.NewGuid().ToString(), stream);
+        }
+
+        public void Add(Recipe recipe)
+        {
+            Recipes.Insert(recipe);
+            recipe.FileId = null;
+            
         }
 
         public void FullUpdate(Recipe recipe, Stream stream)

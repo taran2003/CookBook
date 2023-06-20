@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+              xmlns:viewModels="clr-namespace:CookBoock.ViewModel"
+             xmlns:models="clr-namespace:CookBoock.Models"
+             xmlns:helpers="clr-namespace:CookBoock.Helpers"
+             x:Class="CookBoock.View.RecipePageApi"
+             x:DataType="viewModels:RecipePageViewModel"
+             Title="{Binding Name}">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IconOverride="back.png"/>
+    </Shell.BackButtonBehavior>
+    <!--<ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="{Static helpers:Constants+Images.FavoriteIcon}" Command="{Binding ToCart}"/>
+    </ContentPage.ToolbarItems>-->
+    <Border Margin="-5,-2">
+        <Border Margin="5,5">
+            <ScrollView Margin="5">
+                <Grid x:Name="MainContent">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="3*"/>
+                    </Grid.RowDefinitions>
+                    <Image Grid.Row="0" Source="{Binding Image}"/>
+                    <Border Grid.Row="1">
+                        <VerticalStackLayout Margin="5,0,5,5">
+                            <Label Text="Ингридиенты:" FontFamily="OpenSans-Semibold" FontSize="Medium"/>
+                            <CollectionView x:Name="Ingridients" 
+                            SelectionMode="None"
+                            ItemsSource="{Binding Ingridients}">
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout Orientation="Vertical"/>
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:Ingridients">
+                                        <Label Text="{Binding Ingridient}"/>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Row="2">
+                        <VerticalStackLayout Margin="5,0,5,5">
+                            <Label Text="Рецепт:" FontFamily="OpenSans-Semibold" FontSize="Medium"/>
+                            <Label Text="{Binding CookingProcess}"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+            </ScrollView>
+        </Border>
+    </Border>
+</ContentPage>

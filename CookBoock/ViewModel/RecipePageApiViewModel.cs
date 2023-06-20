@@ -6,20 +6,14 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using CookBoock.Helpers;
-using Mopups.Services;
-using CookBoock.View;
 
 namespace CookBoock.ViewModel
 {
-    class RecipePageViewModel : INotifyPropertyChanged
+    class RecipePageApiViewModel
     {
         private int Id;
-        private RecipeDB Db;
         private Recipe recipe;
-        private Shell shell;
-        public ICommand Delete {get; set;}
-        public ICommand ToCart { get; set;}
+        public ICommand ToFavorites { get; set; }
         private string name;
         public string Name
         {
@@ -33,7 +27,7 @@ namespace CookBoock.ViewModel
         public ObservableCollection<Ingridients> Ingridients
         {
             get => ingridients;
-            set 
+            set
             {
                 SetProperty(ref ingridients, value);
             }
@@ -54,43 +48,20 @@ namespace CookBoock.ViewModel
             set { SetProperty(ref image, value); }
         }
 
-        public RecipePageViewModel(string id, Shell shell)
+        public RecipePageApiViewModel(string id)
         {
             Id = Convert.ToInt32(id);
-            Db = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
-            recipe = Db.FindeById(Id);
+            recipe = RecipeApi.GetRecipe(id);
             name = recipe.Name;
             Ingridients = recipe.Ingridients;
             cookingProcess = recipe.CookingProcess;
-            image = Db.GetImage(recipe.FileId);
-            Delete = new Command(Delite);
-            ToCart = new Command(AddToCart);
-            this.shell = shell;
+            image = recipe.Image;
+            ToFavorites = new Command(AddToFavorites);
         }
 
-        public async void AddToCart()
+        public async void AddToFavorites()
         {
-            recipe.AddToCart();
-            Db.Update(recipe);
-            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-            string text = Constants.Texts.ToastAddToCart;
-            ToastDuration duration = ToastDuration.Short;
-            double fontSize = 14;
-            var toast = Toast.Make(text, duration, fontSize);
-            await toast.Show(cancellationTokenSource.Token);
-        }
 
-        public async void Delite()
-        {
-            await MopupService.Instance.PushAsync(new DeletePopUp());
-            MessagingCenter.Subscribe<DeletePopUpViewModel, bool>(this, "confirm", async (sender, arg) =>
-            {
-                if (arg)
-                {
-                    Db.DeleteById(Id);
-                    await shell.GoToAsync("..");
-                }
-            });
         }
 
         bool SetProperty<T>(ref T storeg, T value, [CallerMemberName] string propertyNmae = null)

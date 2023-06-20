@@ -2,44 +2,50 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             x:Class="CookBoock.MainPage">
+             xmlns:viewModels="clr-namespace:CookBoock.ViewModel"
+             xmlns:models="clr-namespace:CookBoock.Models"
+             xmlns:helpers="clr-namespace:CookBoock.Helpers"
+             x:Class="CookBoock.MainPage"
+             x:DataType="viewModels:FavoritesViewModel"
+             Title="{Static helpers:Constants+Texts.TitleMain}">
     <Page.Behaviors>
         <mct:StatusBarBehavior StatusBarColor="{StaticResource Gray50}"/>
-        
     </Page.Behaviors>
-    <ScrollView>
-        <VerticalStackLayout
-            Spacing="25"
-            Padding="30,0"
-            VerticalOptions="Center">
-
-            <Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
-
-            <Button
-                x:Name="CounterBtn"
-                Text="Click me"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
-
-        </VerticalStackLayout>
-    </ScrollView>
-
+    <Border Margin="-5,-2">
+        <ScrollView>
+            <VerticalStackLayout Margin="0,10">
+                <CollectionView x:Name="RecipeList" 
+                            SelectionMode="Single"
+                            ItemsSource="{Binding RecipesList}"
+                            SelectionChanged="RecipeListSelected">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Recipe">
+                            <Border Margin="5,0" 
+                                BackgroundColor="Transparent">
+                                <Grid Margin="0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="4*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Image x:Name="image"
+                                       HeightRequest="50"
+                                       WidthRequest="50"
+                                       Aspect="Fill" 
+                                       Source="{Binding Image}"
+                                       Grid.Column="0"/>
+                                    <Label Text="{Binding Name}"
+                                       FontSize="Medium"
+                                       Grid.Column="1"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Border>
 </ContentPage>

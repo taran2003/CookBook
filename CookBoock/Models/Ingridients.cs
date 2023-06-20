@@ -5,6 +5,16 @@ namespace CookBoock.Models
 {
     public class Ingridients : INotifyPropertyChanged
     {
+        public Ingridients() 
+        { 
+
+        }
+
+        public Ingridients(string ingridient)
+        {
+            Ingridient = ingridient;
+        }
+
         private string ingridient;
         public string Ingridient
         {
