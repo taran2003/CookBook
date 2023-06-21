@@ -12,6 +12,7 @@
             public const string PencilIcon = "pencil.png";
             public const string PlusIcon = "plus.png";
             public const string RemoveIcon = "remove.png";
+            public const string SearchIcon = "search.png";
             public const string TrashCanIcon = "trash.png";
         }
     }

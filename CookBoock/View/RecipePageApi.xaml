@@ -5,14 +5,14 @@
              xmlns:models="clr-namespace:CookBoock.Models"
              xmlns:helpers="clr-namespace:CookBoock.Helpers"
              x:Class="CookBoock.View.RecipePageApi"
-             x:DataType="viewModels:RecipePageViewModel"
+             x:DataType="viewModels:RecipePageApiViewModel"
              Title="{Binding Name}">
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IconOverride="back.png"/>
     </Shell.BackButtonBehavior>
-    <!--<ContentPage.ToolbarItems>
-        <ToolbarItem IconImageSource="{Static helpers:Constants+Images.FavoriteIcon}" Command="{Binding ToCart}"/>
-    </ContentPage.ToolbarItems>-->
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="{Static helpers:Constants+Images.FavoriteIcon}" Command="{Binding ToFavorites}"/>
+    </ContentPage.ToolbarItems>
     <Border Margin="-5,-2">
         <Border Margin="5,5">
             <ScrollView Margin="5">

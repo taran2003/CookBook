@@ -12,6 +12,7 @@ namespace CookBoock.ViewModel
     {
         public ICommand ColoseDb { get; set; }
         public ICommand DeleteItem { get; set; }
+        public ICommand SearchCommand { get; set; }
         private RecipeDB Db;
         private ObservableCollection<Recipe> recipesList;
         public ObservableCollection<Recipe> RecipesList
@@ -32,11 +33,17 @@ namespace CookBoock.ViewModel
                 Db.Close();
             });
             DeleteItem = new Command<Recipe>(Delete);
+            SearchCommand = new Command<string>(Search);
+        }
+
+        private void Search(string text)
+        {
+            RecipesList = new ObservableCollection<Recipe>(Db.FindeAllByName(text));
         }
 
         private void Delete(Recipe Item)
         {
-            RecipesList.Remove(RecipesList[Item.Id]);
+            RecipesList.Remove(Item);
             OnPropertyChanged();
             Db.DeleteById(Item.Id);
         }

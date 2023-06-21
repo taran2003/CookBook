@@ -1,5 +1,8 @@
 ﻿using CookBoock.Models;
+using Java.Net;
 using LiteDB;
+using System.Net;
+using System.Text.RegularExpressions;
 
 namespace CookBoock.Data
 {
@@ -36,15 +39,26 @@ namespace CookBoock.Data
         public void Add(Recipe recipe, Stream stream)
         {
             Recipes.Insert(recipe);
-            recipe.ImageUrl = null;
             Fs.Upload(recipe.FileId, Guid.NewGuid().ToString(), stream);
         }
 
         public void Add(Recipe recipe)
         {
-            Recipes.Insert(recipe);
-            recipe.FileId = null;
-            
+            if (FindeById(recipe.Id) == null)
+            {
+                Recipes.Insert(recipe);
+                if (recipe.ImageUrl != null)
+                {
+                    WebClient client = new WebClient();
+                    byte[] imageBytes = new byte[0];
+                    client.OpenReadCompleted += (s, e) =>
+                    {
+                        imageBytes = new byte[e.Result.Length];
+                        e.Result.Read(imageBytes, 0, imageBytes.Length);
+                    };
+                    Fs.Upload(recipe.FileId, Guid.NewGuid().ToString(), client.OpenRead(new Uri(recipe.ImageUrl)));
+                }
+            }
         }
 
         public void FullUpdate(Recipe recipe, Stream stream)
@@ -66,25 +80,22 @@ namespace CookBoock.Data
         public List<Recipe> FindeAllByCart()
         {
             List<Recipe> res = Recipes.Find(x => x.IsCart == true).ToList();
-            Thread threadOne;
-            Thread threadTwo;
-            threadOne = new Thread(() => {
-                for (int i = 0; i < res.Count() / 2; i++)
-                {
-                    res[i].Image = GetImage(res[i].FileId);
-                }
-            });
-            threadTwo = new Thread(() =>
+            Parallel.For(0, res.Count(), (int i) =>
             {
-                for (int i = res.Count() / 2; i < res.Count(); i++)
-                {
-                    res[i].Image = GetImage(res[i].FileId);
-                }
+                res[i].Image = GetImage(res[i].FileId);
             });
-            threadOne.Start();
-            threadTwo.Start();
-            threadOne.Join();
-            threadTwo.Join();
+            ClearCashe();
+            return res;
+        }
+
+        public List<Recipe> FindeAllByName(string name)
+        {
+            Regex regex = new Regex($"\\w*{name}\\w*");
+            List<Recipe> res = Recipes.FindAll()?.Where(x => regex.IsMatch(x.Name)).ToList();
+            Parallel.For(0, res.Count(), (int i) =>
+            {
+                res[i].Image = GetImage(res[i].FileId);
+            });
             ClearCashe();
             return res;
         }

@@ -2,6 +2,7 @@
 using CommunityToolkit.Maui.Core;
 using CookBoock.Data;
 using CookBoock.Models;
+using CookBoock.Helpers;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -50,7 +51,6 @@ namespace CookBoock.ViewModel
 
         public RecipePageApiViewModel(string id)
         {
-            Id = Convert.ToInt32(id);
             recipe = RecipeApi.GetRecipe(id);
             name = recipe.Name;
             Ingridients = recipe.Ingridients;
@@ -61,7 +61,15 @@ namespace CookBoock.ViewModel
 
         public async void AddToFavorites()
         {
-
+            RecipeDB dB = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
+            var recipe = new Recipe(this.recipe);
+            dB.Add(recipe);
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+            string text = Constants.Texts.ToastAddToFavorites;
+            ToastDuration duration = ToastDuration.Short;
+            double fontSize = 14;
+            var toast = Toast.Make(text, duration, fontSize);
+            await toast.Show(cancellationTokenSource.Token);
         }
 
         bool SetProperty<T>(ref T storeg, T value, [CallerMemberName] string propertyNmae = null)

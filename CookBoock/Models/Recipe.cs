@@ -15,6 +15,17 @@ namespace CookBoock.Models
 
         public Recipe() {
             Ingridients = new ObservableCollection<Ingridients>();
+            SetFileId();
+        }
+
+        public Recipe(Recipe recipe)
+        {
+            Id = recipe.Id;
+            Name = recipe.Name;
+            Ingridients = recipe.Ingridients;
+            CookingProcess = recipe.CookingProcess;
+            FileId = recipe.FileId;
+            ImageUrl = recipe.ImageUrl;
         }
 
         public void SetFileId()

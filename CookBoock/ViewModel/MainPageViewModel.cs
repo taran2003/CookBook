@@ -26,7 +26,8 @@ namespace CookBoock.ViewModel
 
         public MainPageViewModel()
         { 
-            RecipesList = new ObservableCollection<Recipe>(RecipeApi.GetRecipes(30));
+            recipesList = new ObservableCollection<Recipe>();
+            //RecipesList = new ObservableCollection<Recipe>(RecipeApi.GetRecipes(30));
         }
 
         bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)

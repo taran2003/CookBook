@@ -22,8 +22,11 @@
 
             public const string PlaseHolderRecipe = "Введите рецепт";
             public const string PlaseHolderName = "Введите название рецепта";
-            public const string PlaseHolderIngridient = "Ведите ингридиент";
+            public const string PlaseHolderIngridient = "Введите ингридиент";
+            public const string PlaseHolderSearch = "Введите имя рецепта";
+
             public const string ToastAddToCart = "Рецепт добавлен в корзину";
+            public const string ToastAddToFavorites = "Рецепт добавлен в избраное";
         }
     }
 }

@@ -28,11 +28,11 @@ namespace CookBoock.Data
             var response = client.Execute(request);
             var JSONString = response.Content;
             var recipes = JsonSerializer.Deserialize<Rootobject>(JSONString);
-            var res = new List<Recipe>(); 
-            foreach (var result in recipes.results)
+            var res = new List<Recipe>();
+            Parallel.ForEach(recipes.results, (item) =>
             {
-                res.Add(GetFromResult(result));
-            }
+                res.Add(GetFromResult(item));
+            });
             return res;
         }
 
@@ -54,6 +54,7 @@ namespace CookBoock.Data
                 }
             }
             recipe.Ingridients = bufList;
+            recipe.ImageUrl = result.thumbnail_url;
             recipe.Image = ImageSource.FromUri(new Uri(result.thumbnail_url));
             return recipe;
         }
