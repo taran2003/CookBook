@@ -7,6 +7,7 @@ Microsoft.Maui.Controls.Xaml.dll
 Microsoft.Maui.dll
 Microsoft.Maui.Essentials.dll
 Microsoft.Maui.Graphics.dll
+Mopups.dll
 NativeMedia.dll
 NativeMedia.Permision.Maui.dll
 Xamarin.Android.Glide.Annotations.dll
@@ -160,8 +161,6 @@ Microsoft.Maui.Controls.Compatibility.aar
 maui.aar
 Microsoft.Maui.aar
 Microsoft.Maui.Essentials.aar
+Mopups.aar
 NativeMedia.aar
 Xamarin.Google.Crypto.Tink.Android.aar
-Maui.Tabs.dll
-Mopups.dll
-Mopups.aar

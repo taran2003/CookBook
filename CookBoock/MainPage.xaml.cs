@@ -5,19 +5,24 @@ namespace CookBoock;
 
 public partial class MainPage : ContentPage
 {
+	MainPageViewModel viewModel;
+
 	public MainPage()
 	{
 		InitializeComponent();
-        BindingContext = new MainPageViewModel();
+        BindingContext = viewModel = new MainPageViewModel();
 	}
 
-    private async void RecipeListSelected(object sender, SelectionChangedEventArgs e)
+    protected override void OnAppearing()
     {
-        if (e.CurrentSelection != null)
-        {
-            Recipe recipe = (Recipe)e.CurrentSelection.FirstOrDefault();
-            await Shell.Current.GoToAsync($"RecipePageApi?ItemId={recipe.Id.ToString()}");
-        }
+        base.OnAppearing();
+
+        _ = viewModel.InitAsync();
+    }
+
+    private void RecipeList_RemainingItemsThresholdReached(object sender, EventArgs e)
+    {
+        viewModel.RemainingItemseachedCommand.Execute(null);
     }
 }
 

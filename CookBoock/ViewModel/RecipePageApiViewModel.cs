@@ -10,21 +10,20 @@ using System.Windows.Input;
 
 namespace CookBoock.ViewModel
 {
-    class RecipePageApiViewModel
+    class RecipePageApiViewModel : INotifyPropertyChanged
     {
-        private int Id;
         private Recipe recipe;
         public ICommand ToFavorites { get; set; }
         private string name;
         public string Name
         {
-            get => recipe.Name;
+            get => recipe?.Name ?? "loading...";
             set
             {
                 SetProperty(ref name, value);
             }
         }
-        private ObservableCollection<Ingridients> ingridients;
+        private ObservableCollection<Ingridients> ingridients = new();
         public ObservableCollection<Ingridients> Ingridients
         {
             get => ingridients;
@@ -42,21 +41,57 @@ namespace CookBoock.ViewModel
                 SetProperty(ref cookingProcess, value);
             }
         }
-        private ImageSource image;
-        public ImageSource Image
+        private Microsoft.Maui.Graphics.IImage image;
+        public Microsoft.Maui.Graphics.IImage Image
         {
             get => image;
-            set { SetProperty(ref image, value); }
+            set => SetProperty(ref image, value);
+        }
+        private float height;
+        public float Height
+        {
+            get => height;
+            set { SetProperty(ref height, value); }
+        }
+        private float width;
+        public float Width
+        {
+            get => width;
+            set { SetProperty(ref width, value); }
         }
 
         public RecipePageApiViewModel(string id)
         {
-            recipe = RecipeApi.GetRecipe(id);
-            name = recipe.Name;
-            Ingridients = recipe.Ingridients;
-            cookingProcess = recipe.CookingProcess;
-            image = recipe.Image;
             ToFavorites = new Command(AddToFavorites);
+            this.id = id;
+        }
+
+        private bool _isInitialized;
+        private readonly string id;
+
+        public async Task InitAsync()
+        {
+            if (_isInitialized) { return; }
+
+            await Task.Run(() =>
+            {
+                recipe = RecipeApi.GetRecipe(id);
+                recipe.Image = ImageGeter.GetImageFromUrl(recipe.ImageUrl);
+                recipe.IsLoad = true;
+            });
+
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                Name = recipe.Name;
+                Ingridients = recipe.Ingridients;
+                CookingProcess = recipe.CookingProcess;
+                Image = recipe.Image;
+                Height = Image.Height;
+                Width = Image.Width;
+            });
+
+
+            _isInitialized = true;
         }
 
         public async void AddToFavorites()
@@ -64,6 +99,7 @@ namespace CookBoock.ViewModel
             RecipeDB dB = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
             var recipe = new Recipe(this.recipe);
             dB.Add(recipe);
+            dB.Close();
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
             string text = Constants.Texts.ToastAddToFavorites;
             ToastDuration duration = ToastDuration.Short;

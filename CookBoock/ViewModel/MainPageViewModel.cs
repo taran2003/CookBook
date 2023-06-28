@@ -1,20 +1,18 @@
 ﻿using CookBoock.Data;
 using CookBoock.Models;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CookBoock.ViewModel
 {
-    class MainPageViewModel : INotifyPropertyChanged
+    public class MainPageViewModel : INotifyPropertyChanged
     {
-        private ObservableCollection<Recipe> recipesList;
+        public ICommand SelectRecipeCommand { get; }
+        public ICommand RemainingItemseachedCommand { get; }
+
+        private ObservableCollection<Recipe> recipesList = new();
         public ObservableCollection<Recipe> RecipesList
         {
             get => recipesList;
@@ -25,9 +23,49 @@ namespace CookBoock.ViewModel
         }
 
         public MainPageViewModel()
-        { 
-            recipesList = new ObservableCollection<Recipe>();
-            //RecipesList = new ObservableCollection<Recipe>(RecipeApi.GetRecipes(30));
+        {
+            SelectRecipeCommand = new Command<Recipe>(async(r)=>await SelectRecipeAsync(r));
+            RemainingItemseachedCommand = new Command(async()=>await UpdateList());
+        }
+
+        public bool IsDataLoading { get; private set; } = false;
+
+        public async Task UpdateList()
+        {
+            if (!_isInitialized || IsDataLoading) { return; }
+
+            await MainThread.InvokeOnMainThreadAsync(() => IsDataLoading = true);
+
+            var recipes = new List<Recipe>();
+            await Task.Run(() => recipes = RecipeApi.GetRecipes(_from, _to));
+
+            foreach (var item in recipes)
+            {
+                _from += _to;
+                await MainThread.InvokeOnMainThreadAsync(() => RecipesList.Add(item));
+            }
+            await MainThread.InvokeOnMainThreadAsync(() => IsDataLoading = false);
+
+        }
+
+        private bool _isInitialized;
+        private int _from = 0;
+        private const int _to = 5;
+
+        public async Task InitAsync()
+        {
+            if (_isInitialized) { return; }
+
+            var recipes = new List<Recipe>();
+            await Task.Run(() => recipes = RecipeApi.GetRecipes(_from, _to));
+
+            foreach (var item in recipes)
+            {
+                _from += _to;
+                await MainThread.InvokeOnMainThreadAsync(() => RecipesList.Add(item));
+            }
+
+            _isInitialized = true;
         }
 
         bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
@@ -46,5 +84,10 @@ namespace CookBoock.ViewModel
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private async Task SelectRecipeAsync(Recipe recipe)
+        {
+            await Shell.Current.GoToAsync($"RecipePageApi?ItemId={recipe.Id.ToString()}");
+        }
     }
 }

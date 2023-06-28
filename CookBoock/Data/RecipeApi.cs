@@ -1,7 +1,10 @@
-﻿using CookBoock.Models;
+﻿using Android.App;
+using CookBoock.Helpers;
+using CookBoock.Models;
 using RestSharp;
 using System.Collections.ObjectModel;
 using System.Text.Json;
+using Result = CookBoock.Models.Result;
 
 namespace CookBoock.Data
 {
@@ -9,31 +12,68 @@ namespace CookBoock.Data
     {        
         public static Recipe GetRecipe(string itemId)
         {
-            var client = new RestClient($"https://tasty.p.rapidapi.com/recipes/get-more-info?id={itemId}");
-            var request = new RestRequest($"https://tasty.p.rapidapi.com/recipes/get-more-info?id={itemId}");
-            request.AddHeader("X-RapidAPI-Key", "3b3717f146msh62fd46c8cb27267p161fa7jsn716d8d4e7714");
-            request.AddHeader("X-RapidAPI-Host", "tasty.p.rapidapi.com");
-            var response = client.Execute(request);
-            var JSONString = response.Content;
-            var recipes = JsonSerializer.Deserialize<Result>(JSONString);
+            string JSONString;
+            Result recipes;
+            try
+            {
+                string url = $"{Constants.Texts.Url}get-more-info?id={itemId}";
+                var client = new RestClient(url);
+                var request = new RestRequest(url);
+                request.AddHeader(Constants.Texts.HederKeyName, Constants.Texts.HederKey);
+                request.AddHeader(Constants.Texts.HederHostName, Constants.Texts.HederHost);
+                var response = client.Execute(request);
+                JSONString = response.Content;
+                client.Dispose();
+                recipes = JsonSerializer.Deserialize<Result>(JSONString);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
             return GetFromResult(recipes);
         }
 
-        public static List<Recipe> GetRecipes(int size)
+        public static List<Recipe> GetRecipes(int from, int size)
         {
-            var client = new RestClient($"https://tasty.p.rapidapi.com/recipes/list?from=0&size={size}");
-            var request = new RestRequest($"https://tasty.p.rapidapi.com/recipes/list?from=0&size={size}");
-            request.AddHeader("X-RapidAPI-Key", "3b3717f146msh62fd46c8cb27267p161fa7jsn716d8d4e7714");
-            request.AddHeader("X-RapidAPI-Host", "tasty.p.rapidapi.com");
-            var response = client.Execute(request);
-            var JSONString = response.Content;
-            var recipes = JsonSerializer.Deserialize<Rootobject>(JSONString);
-            var res = new List<Recipe>();
-            Parallel.ForEach(recipes.results, (item) =>
+            string JSONString;
+            Rootobject recipes;
+            try
             {
-                res.Add(GetFromResult(item));
+                string url = $"{Constants.Texts.Url}list?from={from}&size={size}";
+                var client = new RestClient(url);
+                var request = new RestRequest(url);
+                request.AddHeader(Constants.Texts.HederKeyName, Constants.Texts.HederKey);
+                request.AddHeader(Constants.Texts.HederHostName, Constants.Texts.HederHost);
+                var response = client.Execute(request);
+
+                var t= response.IsSuccessStatusCode;
+                if(!t) {
+                    throw new Exception("asdjnaskdjnask jdnkjd");
+                }
+                JSONString = response.Content;
+                client.Dispose();
+                recipes = JsonSerializer.Deserialize<Rootobject>(JSONString);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            var res = new List<Recipe>();
+            Parallel.ForEach(recipes.results, (item) => {
+                res.Add(GetFromResultShort(item));
             });
             return res;
+        }
+
+        static Recipe GetFromResultShort(Result result)
+        {
+            var recipe = new Recipe();
+            recipe.Id = result.id;
+            recipe.Name = result.name;
+            //recipe.ImageUrl = result.thumbnail_url;
+            recipe.Image = ImageGeter.GetImageFromUrl(result.thumbnail_url);
+            return recipe;
         }
 
         static Recipe GetFromResult(Result result)
@@ -46,7 +86,7 @@ namespace CookBoock.Data
                 recipe.CookingProcess += item1.display_text;
             }
             var bufList = new ObservableCollection<Ingridients>();
-            foreach (var item1 in result.sections)
+            foreach (var item1 in result.sections) 
             {
                 foreach (var item2 in item1.components)
                 {
@@ -55,7 +95,7 @@ namespace CookBoock.Data
             }
             recipe.Ingridients = bufList;
             recipe.ImageUrl = result.thumbnail_url;
-            recipe.Image = ImageSource.FromUri(new Uri(result.thumbnail_url));
+            recipe.Image = ImageGeter.GetImageFromUrl(result.thumbnail_url);
             return recipe;
         }
     }

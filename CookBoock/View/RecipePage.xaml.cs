@@ -1,5 +1,3 @@
-using CookBoock.Data;
-using CookBoock.Models;
 using CookBoock.ViewModel;
 
 namespace CookBoock;
@@ -7,6 +5,9 @@ namespace CookBoock;
 [QueryProperty(nameof(ItemId), "ItemId")]
 public partial class RecipePage : ContentPage
 {
+
+    RecipePageViewModel viewModel;
+
     public RecipePage()
 	{
         InitializeComponent();
@@ -15,13 +16,21 @@ public partial class RecipePage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        BindingContext = new RecipePageViewModel(ItemId,Shell.Current);
     }
 
+    private string _id;
     public string ItemId
     {
-        get;
-        set;
+        get => _id;
+        set
+        {
+            _id = value;
+
+            if (BindingContext == default)
+            {
+                BindingContext = viewModel = new RecipePageViewModel(ItemId);
+            }
+        }
     }
 
     private async void GoAddPage(object sender, EventArgs e)

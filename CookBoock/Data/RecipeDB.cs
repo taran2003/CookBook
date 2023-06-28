@@ -1,5 +1,5 @@
-﻿using CookBoock.Models;
-using Java.Net;
+﻿using CookBoock.Helpers;
+using CookBoock.Models;
 using LiteDB;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -30,7 +30,7 @@ namespace CookBoock.Data
             List<Recipe> res  = Recipes.FindAll().ToList();
             Parallel.For(0, res.Count(), (int i) =>
             {
-                res[i].Image = GetImage(res[i].FileId);
+                res[i].Image = GetImage(res[i].FileId, true);
             });
             ClearCashe();
             return res;
@@ -49,14 +49,8 @@ namespace CookBoock.Data
                 Recipes.Insert(recipe);
                 if (recipe.ImageUrl != null)
                 {
-                    WebClient client = new WebClient();
-                    byte[] imageBytes = new byte[0];
-                    client.OpenReadCompleted += (s, e) =>
-                    {
-                        imageBytes = new byte[e.Result.Length];
-                        e.Result.Read(imageBytes, 0, imageBytes.Length);
-                    };
-                    Fs.Upload(recipe.FileId, Guid.NewGuid().ToString(), client.OpenRead(new Uri(recipe.ImageUrl)));
+                    Stream stream = ImageGeter.GetImageStreamFromUrl(recipe.ImageUrl);
+                    Fs.Upload(recipe.FileId, Guid.NewGuid().ToString(), stream);
                 }
             }
         }
@@ -82,31 +76,24 @@ namespace CookBoock.Data
             List<Recipe> res = Recipes.Find(x => x.IsCart == true).ToList();
             Parallel.For(0, res.Count(), (int i) =>
             {
-                res[i].Image = GetImage(res[i].FileId);
+                res[i].Image = GetImage(res[i].FileId,true);
             });
             ClearCashe();
             return res;
         }
 
-        public List<Recipe> FindeAllByName(string name)
-        {
-            Regex regex = new Regex($"\\w*{name}\\w*");
-            List<Recipe> res = Recipes.FindAll()?.Where(x => regex.IsMatch(x.Name)).ToList();
-            Parallel.For(0, res.Count(), (int i) =>
-            {
-                res[i].Image = GetImage(res[i].FileId);
-            });
-            ClearCashe();
-            return res;
-        }
-
-        public ImageSource GetImage(string uuid)
+        public Microsoft.Maui.Graphics.IImage GetImage(string uuid, bool IsSmall = false)
         {
             var stream = FindImageById(uuid);
-            byte[] data = new byte[stream.Length];
-            stream.Read(data, 0, (int)stream.Length - 1);
-            stream.Close();
-            return ImageSource.FromStream(() => new MemoryStream(data));
+            Microsoft.Maui.Graphics.IImage image = null;
+            if (IsSmall)
+            {
+                image = ImageGeter.GetSmallImage(stream);
+            }else
+            {
+                image = ImageGeter.GetImage(stream);
+            }
+            return image;
             //return null;  
         }
 

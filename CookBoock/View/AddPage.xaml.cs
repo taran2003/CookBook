@@ -1,8 +1,4 @@
-using CookBoock.Models;
-using CookBoock.Data;
 using CookBoock.ViewModel;
-using System.Reflection.Metadata;
-using static Android.Content.ClipData;
 namespace CookBoock;
 
 [QueryProperty(nameof(ItemId), "ItemId")]

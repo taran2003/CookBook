@@ -20,31 +20,30 @@
             <ScrollView Margin="5">
                 <Grid x:Name="MainContent">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="*"/>
                         <RowDefinition Height="auto"/>
-                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Image Grid.Row="0" Source="{Binding Image}"/>
+                    <GraphicsView Grid.Row="0" Drawable="{Binding Image}"/>
                     <Border Grid.Row="1">
                         <VerticalStackLayout Margin="5,0,5,5">
-                            <Label Text="Ингридиенты:" FontFamily="OpenSans-Semibold" FontSize="Medium"/>
-                            <CollectionView x:Name="Ingridients" 
-                            SelectionMode="None"
-                            ItemsSource="{Binding Ingridients}">
-                                <CollectionView.ItemsLayout>
-                                    <LinearItemsLayout Orientation="Vertical"/>
-                                </CollectionView.ItemsLayout>
-                                <CollectionView.ItemTemplate>
+                            <Label Text="{Static helpers:Constants+Texts.LabelIngridients}" 
+                                   FontFamily="OpenSans-Semibold" 
+                                   FontSize="Medium"/>
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Ingridients}">
+                                <BindableLayout.ItemTemplate>
                                     <DataTemplate x:DataType="models:Ingridients">
                                         <Label Text="{Binding Ingridient}"/>
                                     </DataTemplate>
-                                </CollectionView.ItemTemplate>
-                            </CollectionView>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
                     </Border>
                     <Border Grid.Row="2">
                         <VerticalStackLayout Margin="5,0,5,5">
-                            <Label Text="Рецепт:" FontFamily="OpenSans-Semibold" FontSize="Medium"/>
+                            <Label Text="{Static helpers:Constants+Texts.LabelRecipes}" 
+                                   FontFamily="OpenSans-Semibold" 
+                                   FontSize="Medium"/>
                             <Label Text="{Binding CookingProcess}"/>
                         </VerticalStackLayout>
                     </Border>

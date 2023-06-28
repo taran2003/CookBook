@@ -5,7 +5,7 @@
         public static class Texts
         {
             public const string TitleMain = "Главная";
-            public const string TitleFavorites = "Избраное";
+            public const string TitleFavorites = "Избранное";
             public const string TitleCart = "Корзина";
             public const string TitleAdd = "Создание";
             public const string TitleRewrite = "Редактирование";
@@ -27,6 +27,13 @@
 
             public const string ToastAddToCart = "Рецепт добавлен в корзину";
             public const string ToastAddToFavorites = "Рецепт добавлен в избраное";
+
+            public const string Url = "https://tasty.p.rapidapi.com/recipes/";
+            public const string HederKeyName = "X-RapidAPI-Key";
+            public const string HederKey = "a588bd3c67mshc55ab8cc40728d1p1cd18fjsn9c3eec6f62e8";
+            public const string HederHostName = "X-RapidAPI-Host";
+            public const string HederHost = "tasty.p.rapidapi.com";
+
         }
     }
 }

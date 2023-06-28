@@ -9,9 +9,11 @@ namespace CookBoock.Models
         public ObservableCollection<Ingridients> Ingridients { get; set; }
         public string CookingProcess { get; set; }
         public string FileId { get; set; }
+        public string SmallFileId { get; set; }
         public string ImageUrl { get; set; }
-        public ImageSource Image { get; set; }
+        public Microsoft.Maui.Graphics.IImage Image { get; set; }
         public bool IsCart { get; set; }
+        public bool IsLoad { get; set; } = false;
 
         public Recipe() {
             Ingridients = new ObservableCollection<Ingridients>();

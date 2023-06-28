@@ -1,6 +1,8 @@
-﻿using Android.App;
+﻿#if ANDROID
+using Android.App;
 using Android.Content;
 using Android.OS;
+#endif
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using CommunityToolkit.Maui;
@@ -28,17 +30,17 @@ public static class MauiProgram
 				events.AddAndroid(android => android
                 .OnActivityResult((activity, requestCode, resultCode, data) => OnActivityResult(requestCode, resultCode, data))
                 .OnPostCreate((activity, bundle) => OnCreate(activity, bundle)));
-#endif
                 static void OnActivityResult(int requestCode, Result resultCode, Intent intent)
                 {
                     if (NativeMedia.Platform.CheckCanProcessResult(requestCode, resultCode, intent))
                         NativeMedia.Platform.OnActivityResult(requestCode, resultCode, intent);
                 }
-
                 static void OnCreate(Activity activity, Bundle savedInstanceState)
                 {
                     NativeMedia.Platform.Init(activity, savedInstanceState);
                 }
+#endif
+
             })
             .ConfigureMauiHandlers(handlers =>
             {

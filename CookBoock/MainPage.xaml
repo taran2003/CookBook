@@ -6,7 +6,7 @@
              xmlns:models="clr-namespace:CookBoock.Models"
              xmlns:helpers="clr-namespace:CookBoock.Helpers"
              x:Class="CookBoock.MainPage"
-             x:DataType="viewModels:FavoritesViewModel"
+             x:DataType="viewModels:MainPageViewModel"
              Title="{Static helpers:Constants+Texts.TitleMain}">
     <Page.Behaviors>
         <mct:StatusBarBehavior StatusBarColor="{StaticResource Gray50}"/>
@@ -15,27 +15,31 @@
         <ScrollView>
             <VerticalStackLayout Margin="0,10">
                 <CollectionView x:Name="RecipeList" 
-                            SelectionMode="Single"
+                            SelectionMode="None"
                             ItemsSource="{Binding RecipesList}"
-                            SelectionChanged="RecipeListSelected">
+                            RemainingItemsThresholdReached="RecipeList_RemainingItemsThresholdReached"
+                            RemainingItemsThreshold="3">
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout Orientation="Vertical"/>
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:Recipe">
-                            <Border Margin="5,0" 
-                                BackgroundColor="Transparent">
+                            <Border Margin="5,0">
+                                <Border.GestureRecognizers>
+
+                                    <TapGestureRecognizer 
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=SelectRecipeCommand}" 
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
                                 <Grid Margin="0,5">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="4*"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Image x:Name="image"
-                                       HeightRequest="50"
-                                       WidthRequest="50"
-                                       Aspect="Fill" 
-                                       Source="{Binding Image}"
+                                    <GraphicsView HeightRequest="50"
+                                       WidthRequest="50" 
+                                       Drawable="{Binding Image}"
                                        Grid.Column="0"/>
                                     <Label Text="{Binding Name}"
                                        FontSize="Medium"

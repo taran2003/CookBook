@@ -7,7 +7,6 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using CookBoock.Helpers;
-using Mopups.Services;
 using CookBoock.View;
 
 namespace CookBoock.ViewModel
@@ -17,7 +16,6 @@ namespace CookBoock.ViewModel
         private int Id;
         private RecipeDB Db;
         private Recipe recipe;
-        private Shell shell;
         public ICommand Delete {get; set;}
         public ICommand ToCart { get; set;}
         private string name;
@@ -47,14 +45,14 @@ namespace CookBoock.ViewModel
                 SetProperty(ref cookingProcess, value);
             }
         }
-        private ImageSource image;
-        public ImageSource Image
+        private Microsoft.Maui.Graphics.IImage image;
+        public Microsoft.Maui.Graphics.IImage Image
         {
             get => image;
             set { SetProperty(ref image, value); }
         }
 
-        public RecipePageViewModel(string id, Shell shell)
+        public RecipePageViewModel(string id)
         {
             Id = Convert.ToInt32(id);
             Db = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
@@ -65,7 +63,6 @@ namespace CookBoock.ViewModel
             image = Db.GetImage(recipe.FileId);
             Delete = new Command(Delite);
             ToCart = new Command(AddToCart);
-            this.shell = shell;
         }
 
         public async void AddToCart()
@@ -82,15 +79,13 @@ namespace CookBoock.ViewModel
 
         public async void Delite()
         {
-            await MopupService.Instance.PushAsync(new DeletePopUp());
-            MessagingCenter.Subscribe<DeletePopUpViewModel, bool>(this, "confirm", async (sender, arg) =>
+            var returnValue = await (new DeletePopUp()).ShowAsync();
+
+            if (returnValue.status == DialogReturnStatuses.Positive)
             {
-                if (arg)
-                {
-                    Db.DeleteById(Id);
-                    await shell.GoToAsync("..");
-                }
-            });
+                Db.DeleteById(Id);
+                await Shell.Current.GoToAsync("..");
+            }
         }
 
         bool SetProperty<T>(ref T storeg, T value, [CallerMemberName] string propertyNmae = null)

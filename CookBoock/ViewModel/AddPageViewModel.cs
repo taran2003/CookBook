@@ -101,7 +101,7 @@ namespace CookBoock.ViewModel
             Id = Convert.ToInt32(id);
             Db = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
             recipe = Db.FindeById(Id);
-            Image = Db.GetImage(recipe.FileId);
+            Image = ImageSource.FromStream(()=>Db.GetStream(recipe.FileId));
             stream = null;
             Title = Constants.Texts.TitleRewrite;
             ingridientAdd = new Command(() =>
@@ -162,9 +162,10 @@ namespace CookBoock.ViewModel
                 return; 
             }
             stream = await files[0].OpenReadAsync();
-            ImageSource c =
             Image = null;
-            Image = ImageSource.FromStream(() => stream);
+#if ANDROID
+            Image = ImageSource.FromStream(()=>stream);
+#endif
         }
 
         private void RemoveIngridient(Ingridients obj)

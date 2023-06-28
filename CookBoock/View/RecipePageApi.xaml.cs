@@ -5,6 +5,8 @@ namespace CookBoock.View;
 [QueryProperty(nameof(ItemId), "ItemId")]
 public partial class RecipePageApi : ContentPage
 {
+    RecipePageApiViewModel viewModel;
+
 	public RecipePageApi()
 	{
 		InitializeComponent();
@@ -13,12 +15,21 @@ public partial class RecipePageApi : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        BindingContext = new RecipePageApiViewModel(ItemId);
+        _ = viewModel.InitAsync();    
     }
 
+    private string _id;
     public string ItemId
     {
-        get;
-        set;
+        get => _id;
+        set
+        {
+            _id = value;
+
+            if (BindingContext == default)
+            {
+                BindingContext = viewModel = new RecipePageApiViewModel(ItemId);
+            }
+        }
     }
 }

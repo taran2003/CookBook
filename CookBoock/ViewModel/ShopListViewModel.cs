@@ -1,21 +1,17 @@
 ﻿using CookBoock.Data;
 using CookBoock.Models;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CookBoock.ViewModel
 {
     class ShopListViewModel : INotifyPropertyChanged
     {
-        public ICommand ColoseDb { get; set; }
-        public ICommand DeleteItem { get; set; }
+        public ICommand ColoseDb { get; }
+        public ICommand DeleteItem { get; }
+        public ICommand SelectRecipeCommand { get; }
         private RecipeDB Db;
         private ObservableCollection<Recipe> recipesList;
         public ObservableCollection<Recipe> RecipesList
@@ -36,6 +32,12 @@ namespace CookBoock.ViewModel
                 Db.Close();
             });
             DeleteItem = new Command<Recipe>(Delete);
+            SelectRecipeCommand = new Command<Recipe>(async (r) => await SelectRecipeAsync(r));
+        }
+
+        private async Task SelectRecipeAsync(Recipe recipe)
+        {
+            await Shell.Current.GoToAsync($"RecipePage?ItemId={recipe.Id.ToString()}");
         }
 
         private void Delete(Recipe Item)

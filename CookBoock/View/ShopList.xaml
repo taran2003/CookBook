@@ -12,30 +12,27 @@
             <VerticalStackLayout Margin="0,10">
                 <CollectionView x:Name="RecipeList" 
                             SelectionMode="Single"
-                            ItemsSource="{Binding RecipesList}"
-                            SelectionChanged="RecipeListSelected">
+                            ItemsSource="{Binding RecipesList}">
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout Orientation="Vertical"/>
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="models:Recipe">
-                            <Border Margin="5,0" 
-                                BackgroundColor="Transparent">
-                                <Grid Margin="0,5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="4*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
+                            <Border Margin="5,0">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ShopListViewModel}}, Path=SelectRecipeCommand}" 
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                                <Grid Margin="0,5" ColumnDefinitions="*,4*,*">
                                     <Grid.RowDefinitions>
                                         <RowDefinition/>
                                         <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
-                                    <Image x:Name="image"
+                                    <GraphicsView x:Name="image"
                                        HeightRequest="50"
-                                       WidthRequest="50"
-                                       Aspect="Fill" 
-                                       Source="{Binding Image}"
+                                       WidthRequest="50" 
+                                       Drawable="{Binding Image}"
                                        Grid.Column="0"
                                        Grid.RowSpan="2"/>
                                     <Label Text="{Binding Name}"

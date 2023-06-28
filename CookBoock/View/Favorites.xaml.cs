@@ -1,22 +1,23 @@
-using CookBoock.Data;
-using CookBoock.Models;
 using CookBoock.ViewModel;
-using Microsoft.Maui.Controls;
-
 
 namespace CookBoock;
 
 public partial class Favorites : ContentPage
 {
+    private FavoritesViewModel viewModel;
+
     public Favorites()
 	{
 		InitializeComponent();
-        
+
+        BindingContext = viewModel = new FavoritesViewModel();
     }
+
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        BindingContext = new FavoritesViewModel();
+
+        _ = viewModel.InitAsync();
     }
 
     private async void Add(object sender, EventArgs e)
@@ -24,12 +25,8 @@ public partial class Favorites : ContentPage
         await Navigation.PushAsync(new AddPage());
     }
 
-    private async void RecipeListSelected(object sender, SelectionChangedEventArgs e)
+    private void searchBar_TextChanged(object sender, TextChangedEventArgs e)
     {
-        if (e.CurrentSelection != null)
-        {
-            Recipe recipe = (Recipe)e.CurrentSelection.FirstOrDefault();
-            await Shell.Current.GoToAsync($"RecipePage?ItemId={recipe.Id.ToString()}");
-        }
+        viewModel.SearchCommand?.Execute(e.NewTextValue);
     }
 }

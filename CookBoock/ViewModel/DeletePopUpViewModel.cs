@@ -1,13 +1,6 @@
-﻿using CookBoock.View;
-using Mopups.Services;
-using System;
-using System.Collections.Generic;
+﻿using CookBoock.Helpers;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace CookBoock.ViewModel
 {
     class DeletePopUpViewModel : INotifyPropertyChanged
@@ -17,16 +10,18 @@ namespace CookBoock.ViewModel
 
         public DeletePopUpViewModel()
         {
-            Confirm = new Command(async () =>
-            {
-                await MopupService.Instance.PopAsync();
-                MessagingCenter.Send<DeletePopUpViewModel,bool>(this, "confirm", true);
-            });
-            Reject = new Command(async () =>
-            {
-                await MopupService.Instance.PopAsync();
-                MessagingCenter.Send<DeletePopUpViewModel, bool>(this, "confirm", false);
-            });
+        }
+
+        private readonly TaskCompletionSource<DialogReturnValue> _taskCompletionSource = new();
+
+        public Task<DialogReturnValue> ReturnValueAsync()
+        {
+            return _taskCompletionSource.Task;
+        }
+
+        public void SetReturnValue(DialogReturnStatuses status)
+        {
+            _taskCompletionSource.TrySetResult(new DialogReturnValue(status));
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
