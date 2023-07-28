@@ -9,6 +9,7 @@
             public const string FavoriteIcon = "favorite.png";
             public const string HomeIcon = "Home.png";
             public const string ShopListIcon = "list.png";
+            public const string FlyoutIcon = "option.png";
             public const string PencilIcon = "pencil.png";
             public const string PlusIcon = "plus.png";
             public const string RemoveIcon = "remove.png";

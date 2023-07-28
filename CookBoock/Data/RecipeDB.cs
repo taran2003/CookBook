@@ -1,8 +1,6 @@
 ﻿using CookBoock.Helpers;
 using CookBoock.Models;
 using LiteDB;
-using System.Net;
-using System.Text.RegularExpressions;
 
 namespace CookBoock.Data
 {

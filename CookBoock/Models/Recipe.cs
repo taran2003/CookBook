@@ -7,9 +7,9 @@ namespace CookBoock.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public ObservableCollection<Ingridients> Ingridients { get; set; }
+        public ObservableCollection<Tags> Tags { get; set; }
         public string CookingProcess { get; set; }
         public string FileId { get; set; }
-        public string SmallFileId { get; set; }
         public string ImageUrl { get; set; }
         public Microsoft.Maui.Graphics.IImage Image { get; set; }
         public bool IsCart { get; set; }
@@ -17,6 +17,7 @@ namespace CookBoock.Models
 
         public Recipe() {
             Ingridients = new ObservableCollection<Ingridients>();
+            Tags = new ObservableCollection<Tags>();
             SetFileId();
         }
 
@@ -26,6 +27,7 @@ namespace CookBoock.Models
             Name = recipe.Name;
             Ingridients = recipe.Ingridients;
             CookingProcess = recipe.CookingProcess;
+            Tags = recipe.Tags;
             FileId = recipe.FileId;
             ImageUrl = recipe.ImageUrl;
         }

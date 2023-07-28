@@ -36,6 +36,15 @@ namespace CookBoock.ViewModel
                 SetProperty(ref ingridients, value);
             }
         }
+        private ObservableCollection<Tags> tags;
+        public ObservableCollection<Tags> Tags
+        {
+            get => tags;
+            set 
+            {
+                SetProperty(ref tags, value);
+            }
+        }
         private string cookingProcess;
         public string CookingProcess
         {
@@ -57,8 +66,9 @@ namespace CookBoock.ViewModel
             Id = Convert.ToInt32(id);
             Db = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
             recipe = Db.FindeById(Id);
-            name = recipe.Name;
+            Name = recipe.Name;
             Ingridients = recipe.Ingridients;
+            Tags = recipe.Tags;
             cookingProcess = recipe.CookingProcess;
             image = Db.GetImage(recipe.FileId);
             Delete = new Command(Delite);

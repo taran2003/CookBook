@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:CookBoock.ViewModel"
+             xmlns:models="clr-namespace:CookBoock.Models"
+             xmlns:helpers="clr-namespace:CookBoock.Helpers"
+             x:Class="CookBoock.FavoritesTag"
+             x:DataType="viewModels:FavoritesViewModel"
+             Title="{Static helpers:Constants+Texts.TitleFavorites}">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="{Static helpers:Constants+Images.PlusIcon}" Command="{Binding ColoseDb}" Clicked="Add"/>
+    </ContentPage.ToolbarItems>
+
+    <Border Margin="-5,-2">
+        <StackLayout Orientation="Vertical">
+            <Border Margin="5,5">
+                <SearchBar x:Name="searchBar"
+                           Placeholder="{Static helpers:Constants+Texts.PlaseHolderSearchTag}"
+                           SearchCommand="{Binding SearchTagCommand}"
+                           SearchCommandParameter="{Binding Text,Source={x:Reference searchBar}}"
+                           TextChanged="searchBar_TextChanged">
+                </SearchBar>
+            </Border>
+            <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                         Command="{Binding RefreshCommand}">
+
+                <CollectionView SelectionMode="None" 
+                                    ItemsSource="{Binding RecipesList}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Recipe">
+                            <Border Margin="5,0">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer 
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:FavoritesViewModel}}, Path=SelectRecipeCommand}" 
+                                        CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+                                <Grid Margin="0,5"
+                                       ColumnDefinitions="*,4*,*">
+                                    <GraphicsView x:Name="image"
+                                       HeightRequest="50"
+                                       WidthRequest="50"
+                                       Drawable="{Binding Image}"
+                                       Grid.Column="0"/>
+                                    <Label Text="{Binding Name}"
+                                       FontSize="Medium" VerticalOptions="Center"
+                                       Grid.Column="1"/>
+                                    <ImageButton Source="{Static helpers:Constants+Images.TrashCanIcon}" 
+                                             HeightRequest="25" 
+                                             WidthRequest="25"
+                                             Grid.Column="2"
+                                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:FavoritesViewModel}}, 
+                                                               Path=DeleteItem}"
+                                             CommandParameter="{Binding .}"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+        </StackLayout>
+    </Border>
+</ContentPage>

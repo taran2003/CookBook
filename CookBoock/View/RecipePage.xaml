@@ -20,12 +20,16 @@
             <ScrollView Margin="5">
                 <Grid x:Name="MainContent">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <GraphicsView Grid.Row="0" Drawable="{Binding Image}"/>
-                    <Border Grid.Row="1">
+                    <GraphicsView Grid.Row="0" 
+                                  Drawable="{Binding Image}"  
+                                  HeightRequest="300" 
+                                  WidthRequest="400"/>
+                    <Border Grid.Row="2">
                         <VerticalStackLayout Margin="5,0,5,5">
                             <Label Text="{Static helpers:Constants+Texts.LabelIngridients}" 
                                    FontFamily="OpenSans-Semibold" 
@@ -39,7 +43,21 @@
                             </VerticalStackLayout>
                         </VerticalStackLayout>
                     </Border>
-                    <Border Grid.Row="2">
+                    <Border Grid.Row="1">
+                        <VerticalStackLayout Margin="5,0,5,5">
+                            <Label Text="{Static helpers:Constants+Texts.LabelTags}" 
+                                   FontFamily="OpenSans-Semibold" 
+                                   FontSize="Medium"/>
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Tags}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="models:Tags">
+                                        <Label Text="{Binding Tag}"/>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Row="3">
                         <VerticalStackLayout Margin="5,0,5,5">
                             <Label Text="{Static helpers:Constants+Texts.LabelRecipes}" 
                                    FontFamily="OpenSans-Semibold" 

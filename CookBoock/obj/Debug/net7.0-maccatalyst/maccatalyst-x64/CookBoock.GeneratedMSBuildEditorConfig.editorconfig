@@ -58,17 +58,17 @@ build_metadata.AdditionalFiles.ManifestResourceName = CookBoock.View.Favorites.x
 build_metadata.AdditionalFiles.TargetPath = View\Favorites.xaml
 build_metadata.AdditionalFiles.RelativePath = View\Favorites.xaml
 
+[D:/c\#/Maui/CookBoock/CookBoock/View/FavoritesTag.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = CookBoock.View.FavoritesTag.xaml
+build_metadata.AdditionalFiles.TargetPath = View\FavoritesTag.xaml
+build_metadata.AdditionalFiles.RelativePath = View\FavoritesTag.xaml
+
 [D:/c\#/Maui/CookBoock/CookBoock/View/RecipePage.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = CookBoock.View.RecipePage.xaml
 build_metadata.AdditionalFiles.TargetPath = View\RecipePage.xaml
 build_metadata.AdditionalFiles.RelativePath = View\RecipePage.xaml
-
-[D:/c\#/Maui/CookBoock/CookBoock/View/RecipePageApi.xaml]
-build_metadata.AdditionalFiles.GenKind = Xaml
-build_metadata.AdditionalFiles.ManifestResourceName = CookBoock.View.RecipePageApi.xaml
-build_metadata.AdditionalFiles.TargetPath = View\RecipePageApi.xaml
-build_metadata.AdditionalFiles.RelativePath = View\RecipePageApi.xaml
 
 [D:/c\#/Maui/CookBoock/CookBoock/View/ShopList.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:viewModels="clr-namespace:CookBoock.ViewModel"
              xmlns:models="clr-namespace:CookBoock.Models"
              xmlns:helpers="clr-namespace:CookBoock.Helpers"
@@ -10,11 +11,18 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="{Static helpers:Constants+Images.PlusIcon}" Command="{Binding ColoseDb}" Clicked="Add"/>
     </ContentPage.ToolbarItems>
+    <!--<Shell.BackButtonBehavior>
+        <BackButtonBehavior IconOverride="option.png"/>
+    </Shell.BackButtonBehavior>-->
+    <Page.Behaviors>
+        <mct:StatusBarBehavior StatusBarColor="{StaticResource Gray50}"/>
+    </Page.Behaviors>
+    
     <Border Margin="-5,-2">
         <StackLayout Orientation="Vertical">
             <Border Margin="5,5">
                 <SearchBar x:Name="searchBar"
-                           Placeholder="{Static helpers:Constants+Texts.PlaseHolderSearch}"
+                           Placeholder="{Static helpers:Constants+Texts.PlaseHolderSearchName}"
                            SearchCommand="{Binding SearchCommand}"
                            SearchCommandParameter="{Binding Text,Source={x:Reference searchBar}}"
                            TextChanged="searchBar_TextChanged">

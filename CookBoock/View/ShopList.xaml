@@ -7,6 +7,9 @@
              x:Class="CookBoock.ShopList"
              x:DataType="viewModels:ShopListViewModel"
              Title="{Static helpers:Constants+Texts.TitleCart}">
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior IconOverride="option.png"/>
+    </Shell.BackButtonBehavior>
     <Border Margin="-5,-2">
         <ScrollView>
             <VerticalStackLayout Margin="0,10">

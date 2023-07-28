@@ -122,10 +122,10 @@ public class CustomShellRenderer : ShellRenderer
             AndroidX.AppCompat.Widget.Toolbar toolbar,
             DrawerLayout drawerLayout) : base(shellContext, toolbar, drawerLayout)
         {
+            _drawerLayout = drawerLayout;
             Current = this;
             // HERE CHANGE THE COLOR YOU NEED FOR YOUR APP
             Current.TintColor = Color.FromArgb("#000000");
-            _drawerLayout = drawerLayout;
         }
     }
 

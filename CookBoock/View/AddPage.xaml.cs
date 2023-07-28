@@ -28,8 +28,8 @@ public partial class AddPage : ContentPage
         set;
     }
 
-    private async void GoBack(object sender, EventArgs e)
-    {
-        await Shell.Current.GoToAsync("..");
-    }
+    //private async void GoBack(object sender, EventArgs e)
+    //{
+    //    await Shell.Current.GoToAsync("..");
+    //}
 }

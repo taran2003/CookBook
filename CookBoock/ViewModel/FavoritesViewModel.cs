@@ -12,6 +12,7 @@ namespace CookBoock.ViewModel
         public ICommand ColoseDb { get; set; }
         public ICommand DeleteItem { get; set; }
         public ICommand SearchCommand { get; set; }
+        public ICommand SearchTagCommand { get; set; }
         public ICommand SelectRecipeCommand { get; }
         public ICommand RefreshCommand { get; }
         private RecipeDB Db;
@@ -40,6 +41,7 @@ namespace CookBoock.ViewModel
             });
             DeleteItem = new Command<Recipe>(Delete);
             SearchCommand = new Command<string>(Search);
+            SearchTagCommand = new Command<string>(SearchByTag);
             RefreshCommand = new Command(refresh);
             SelectRecipeCommand = new Command<Recipe>(async (r) => await SelectRecipeAsync(r));
         }
@@ -48,16 +50,17 @@ namespace CookBoock.ViewModel
 
         public async Task InitAsync()
         {
+
             if (_isInitialized)
             {
                 return;
             }
-
             var recipes = new List<Recipe>();
             await Task.Run(() => recipes = Db.GetAll());
 
             _allRecipes = recipes;
 
+            recipesList.Clear();
             foreach (var item in recipes)
             {
                 await MainThread.InvokeOnMainThreadAsync(()=>RecipesList.Add(item));
@@ -91,6 +94,35 @@ namespace CookBoock.ViewModel
         
         }
 
+        private void SearchByTag(string text)
+        {
+            RecipesList.Clear();
+            var results = new List<Recipe>();
+            if (text.Trim(' ').Length != 0)
+            {
+                foreach (var item in _allRecipes)
+                {
+                    foreach (var item2 in item.Tags)
+                    {
+                        if (item2.Tag.Contains(text, StringComparison.OrdinalIgnoreCase))
+                        {
+                            results.Add(item);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                results = _allRecipes.ToList();
+            }
+
+            foreach (var item in results)
+            {
+                RecipesList.Add(item);
+            }
+
+        }
+
         private void Delete(Recipe Item)
         {
             RecipesList.Remove(Item);
@@ -100,7 +132,15 @@ namespace CookBoock.ViewModel
 
         private async Task SelectRecipeAsync(Recipe recipe)
         {
-            await Shell.Current.GoToAsync($"RecipePage?ItemId={recipe.Id.ToString()}");
+            try
+            {
+                await Shell.Current.GoToAsync($"RecipePage?ItemId={recipe.Id.ToString()}");
+            }
+            catch
+            {
+                throw;
+            }
+
         }
 
         bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
