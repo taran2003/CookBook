@@ -11,6 +11,7 @@
             public const string TitleRewrite = "Редактирование";
 
             public const string LabelIngridients = "Ингридиенты";
+            public const string LabelTags = "Тэги";
             public const string LabelName = "Название";
             public const string LabelRecipes = "Рецепт";
             public const string LabelDeletPopUp = "Удалить рецепт?";
@@ -27,6 +28,7 @@
 
             public const string ToastAddToCart = "Рецепт добавлен в корзину";
             public const string ToastAddToFavorites = "Рецепт добавлен в избраное";
+            public const string ToastValidation = "Неправельный формат даных";
 
             public const string Url = "https://tasty.p.rapidapi.com/recipes/";
             public const string HederKeyName = "X-RapidAPI-Key";

@@ -6,6 +6,8 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using NativeMedia;
 using Constants = CookBoock.Helpers.Constants;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 
 namespace CookBoock.ViewModel
 {
@@ -14,8 +16,10 @@ namespace CookBoock.ViewModel
         private RecipeDB Db;
         Recipe recipe;
         int Id { get; set; }
-        public ICommand ingridientAdd { get; set; }
+        public ICommand IngridientAdd { get; set; }
+        public ICommand TagAdd { get; set; }
         public ICommand IngridientRemoveCommand { get; set; }
+        public ICommand TagsRemoveCommand { get; set; }
         public ICommand saveData { get; set; }
         public ICommand ImageLoad { get; set; }
         Stream stream { get; set; }
@@ -80,46 +84,74 @@ namespace CookBoock.ViewModel
                 }
             }
         }
+        public ObservableCollection<Tag> Tags
+        {
+            get => recipe.Tags;
+            set
+            {
+                if (recipe.Tags != value)
+                {
+                    recipe.Tags = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public AddPageViewModel()
         {
-            Db = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
+            Init();
             recipe = new Recipe();
             stream = null;
             Title = Constants.Texts.TitleAdd;
-            ingridientAdd = new Command(()=>
-            {
-                ingridients.Add(new Ingridients());
-            });
-            IngridientRemoveCommand = new Command<Ingridients>(RemoveIngridient);
             saveData = new Command(Save);
-            ImageLoad = new Command(SetImage);
         }
 
         public AddPageViewModel(string id)
         {
+            Init();
             Id = Convert.ToInt32(id);
-            Db = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
             recipe = Db.FindeById(Id);
-            Image = ImageSource.FromStream(()=>Db.GetStream(recipe.FileId));
+            Image = ImageSource.FromStream(() => Db.GetStream(recipe.FileId));
             stream = null;
             Title = Constants.Texts.TitleRewrite;
-            ingridientAdd = new Command(() =>
+            saveData = new Command(Update);
+        }
+        public void Init()
+        {
+            Db = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
+            IngridientAdd = new Command(() =>
             {
                 ingridients.Add(new Ingridients());
             });
+            TagAdd = new Command(() =>
+            {
+                Tags.Add(new Tag());
+            });
             IngridientRemoveCommand = new Command<Ingridients>(RemoveIngridient);
-            saveData = new Command(Update);
+            TagsRemoveCommand = new Command<Tag>(RemoveTag);
             ImageLoad = new Command(SetImage);
         }
 
         private async void Save()
         {
-            recipe.SetFileId();
-            stream = await files[0].OpenReadAsync();
-            Db.Add(recipe, stream);
-            stream.Close();
-            Db.Close();
+            if (image != null && name.Trim(' ').Length != 0 && Tags.Count != 0 && ingridients.Count != 0 && cookingProcess.Trim().Length != 0)
+            {
+                recipe.SetFileId();
+                stream = await files[0].OpenReadAsync();
+                Db.Add(recipe, stream);
+                stream.Close();
+                Db.Close();
+                await Shell.Current.GoToAsync("..");
+            }
+            else
+            {
+                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                string text = Constants.Texts.ToastValidation;
+                ToastDuration duration = ToastDuration.Short;
+                double fontSize = 14;
+                var toast = Toast.Make(text, duration, fontSize);
+                await toast.Show(cancellationTokenSource.Token);
+            }
         }
 
         private async void Update()
@@ -135,6 +167,11 @@ namespace CookBoock.ViewModel
             Db.FullUpdate(recipe, stream);
             stream.Close();
             Db.Close();
+        }
+
+        private void RemoveTag(Tag obj)
+        {
+            Tags.Remove(obj);
         }
 
         private async void SetImage()

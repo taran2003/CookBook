@@ -25,6 +25,13 @@ namespace CookBoock.Models
             }
         }
 
+        public override bool Equals(object obj)
+        {
+            var item = obj as Ingridients;
+            if (item == null) return false;
+            return this.Ingridient.Equals(item.Ingridient);
+        }
+
         bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
         {
             if (Object.Equals(storage, value))

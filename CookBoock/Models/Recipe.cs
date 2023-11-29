@@ -7,6 +7,7 @@ namespace CookBoock.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public ObservableCollection<Ingridients> Ingridients { get; set; }
+        public ObservableCollection<Tag> Tags { get; set; }
         public string CookingProcess { get; set; }
         public string FileId { get; set; }
         public string SmallFileId { get; set; }
@@ -17,6 +18,7 @@ namespace CookBoock.Models
 
         public Recipe() {
             Ingridients = new ObservableCollection<Ingridients>();
+            Tags = new ObservableCollection<Tag>();
             SetFileId();
         }
 
@@ -25,6 +27,7 @@ namespace CookBoock.Models
             Id = recipe.Id;
             Name = recipe.Name;
             Ingridients = recipe.Ingridients;
+            Tags = recipe.Tags;
             CookingProcess = recipe.CookingProcess;
             FileId = recipe.FileId;
             ImageUrl = recipe.ImageUrl;

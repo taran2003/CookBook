@@ -6,23 +6,16 @@ using System.Text.RegularExpressions;
 
 namespace CookBoock.Data
 {
-    class RecipeDB
+    class RecipeDB : DB
     {
-        private LiteDatabase Db;
         private ILiteStorage<string> Fs;
         private ILiteCollection<Recipe> Recipes;
         private LiteFileStream<string> ImageStream;
 
-        public RecipeDB(string dbPath)
-        { 
-            Db = new LiteDatabase("Filename="+dbPath+";Upgrate=true");
+        public RecipeDB(string dbPath) : base( dbPath)
+        {             
             Fs = Db.FileStorage;
             Recipes = Db.GetCollection<Recipe>();
-        }
-
-        public void Close()
-        {
-            Db.Dispose();
         }
 
         public List<Recipe> GetAll()

@@ -20,12 +20,13 @@
             <ScrollView Margin="5">
                 <Grid x:Name="MainContent">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <GraphicsView Grid.Row="0" Drawable="{Binding Image}"/>
-                    <Border Grid.Row="1">
+                    <Border Grid.Row="0">
                         <VerticalStackLayout Margin="5,0,5,5">
                             <Label Text="{Static helpers:Constants+Texts.LabelIngridients}" 
                                    FontFamily="OpenSans-Semibold" 
@@ -34,6 +35,20 @@
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate x:DataType="models:Ingridients">
                                         <Label Text="{Binding Ingridient}"/>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </VerticalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border Grid.Row="1">
+                        <VerticalStackLayout Margin="5,0,5,5">
+                            <Label Text="{Static helpers:Constants+Texts.LabelTags}" 
+                                   FontFamily="OpenSans-Semibold" 
+                                   FontSize="Medium"/>
+                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Tags}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="models:Tag">
+                                        <Label Text="{Binding Tag}"/>
                                     </DataTemplate>
                                 </BindableLayout.ItemTemplate>
                             </VerticalStackLayout>

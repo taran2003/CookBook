@@ -79,3 +79,9 @@ build_metadata.AdditionalFiles.GenKind = Xaml
 build_metadata.AdditionalFiles.ManifestResourceName = CookBoock.View.ShopList.xaml
 build_metadata.AdditionalFiles.TargetPath = View\ShopList.xaml
 build_metadata.AdditionalFiles.RelativePath = View\ShopList.xaml
+
+[D:/c\#/Maui/CookBoock/CookBoock/View/User.xaml]
+build_metadata.AdditionalFiles.GenKind = Xaml
+build_metadata.AdditionalFiles.ManifestResourceName = CookBoock.View.User.xaml
+build_metadata.AdditionalFiles.TargetPath = View\User.xaml
+build_metadata.AdditionalFiles.RelativePath = View\User.xaml
