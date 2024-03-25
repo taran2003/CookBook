@@ -27,6 +27,15 @@ namespace CookBoock.ViewModel
                 SetProperty(ref name, value);
             }
         }
+        private ObservableCollection<Step> steps;
+        public ObservableCollection<Step> Steps 
+        { 
+            get => steps;
+            set 
+            {
+                SetProperty(ref steps, value);
+            } 
+        }
         private ObservableCollection<Ingridients> ingridients;
         public ObservableCollection<Ingridients> Ingridients
         {
@@ -36,13 +45,13 @@ namespace CookBoock.ViewModel
                 SetProperty(ref ingridients, value);
             }
         }
-        private string cookingProcess;
-        public string CookingProcess
+        private ObservableCollection<Tag> tags;
+        public ObservableCollection<Tag> Tags
         {
-            get => cookingProcess;
+            get => tags;
             set
             {
-                SetProperty(ref cookingProcess, value);
+                SetProperty(ref tags, value);
             }
         }
         private Microsoft.Maui.Graphics.IImage image;
@@ -56,10 +65,22 @@ namespace CookBoock.ViewModel
         {
             Id = Convert.ToInt32(id);
             Db = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
-            recipe = Db.FindeById(Id);
+            update();
+        }
+
+        public void update()
+        {
+            steps = new ObservableCollection<Step>();
+            recipe = Db.GetById(Id);
+            steps = recipe.Steps;
+            for (int i = 0; i < steps.Count; i++)
+            {
+                var stream = Db.FindImageById(steps[i].FileId);
+                steps[i].Image = ImageSource.FromStream(() => stream);
+            }
             name = recipe.Name;
             Ingridients = recipe.Ingridients;
-            cookingProcess = recipe.CookingProcess;
+            Tags = recipe.Tags;
             image = Db.GetImage(recipe.FileId);
             Delete = new Command(Delite);
             ToCart = new Command(AddToCart);

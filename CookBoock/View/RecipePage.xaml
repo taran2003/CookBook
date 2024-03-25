@@ -15,55 +15,75 @@
         <ToolbarItem IconImageSource="{Static helpers:Constants+Images.AddCartIcon}" Command="{Binding ToCart}"/>
         <ToolbarItem IconImageSource="{Static helpers:Constants+Images.TrashCanIcon}" Command="{Binding Delete}"/>
     </ContentPage.ToolbarItems>
-    <Border Margin="-5,-2">
-        <Border Margin="5,5">
-            <ScrollView Margin="5">
-                <Grid x:Name="MainContent">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <GraphicsView Grid.Row="0" Drawable="{Binding Image}"/>
-                    <Border Grid.Row="0">
-                        <VerticalStackLayout Margin="5,0,5,5">
-                            <Label Text="{Static helpers:Constants+Texts.LabelIngridients}" 
+    <Border Margin="-5,0">
+        <Grid>
+            <Image Source="{Static helpers:Constants+Images.BackGroundImage}"
+                   Aspect="AspectFill"
+                   HorizontalOptions="Start"/>
+            <Border Margin="5,5">
+                <ScrollView Margin="5">
+                    <Grid x:Name="MainContent">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <GraphicsView Grid.Row="0" HeightRequest="300" Drawable="{Binding Image}"/>
+                        <Border Grid.Row="1">
+                            <VerticalStackLayout Margin="5,0,5,5">
+                                <Label Text="{Static helpers:Constants+Texts.LabelIngridients}" 
                                    FontFamily="OpenSans-Semibold" 
                                    FontSize="Medium"/>
-                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Ingridients}">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate x:DataType="models:Ingridients">
-                                        <Label Text="{Binding Ingridient}"/>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Ingridients}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="models:Ingridients">
+                                            <Label Text="{Binding _Ingridient}"/>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
                             </VerticalStackLayout>
-                        </VerticalStackLayout>
-                    </Border>
-                    <Border Grid.Row="1">
-                        <VerticalStackLayout Margin="5,0,5,5">
-                            <Label Text="{Static helpers:Constants+Texts.LabelTags}" 
+                        </Border>
+                        <Border Grid.Row="2">
+                            <VerticalStackLayout Margin="5,0,5,5">
+                                <Label Text="{Static helpers:Constants+Texts.LabelTags}" 
                                    FontFamily="OpenSans-Semibold" 
                                    FontSize="Medium"/>
-                            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Tags}">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate x:DataType="models:Tag">
-                                        <Label Text="{Binding Tag}"/>
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Tags}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="models:Tag">
+                                            <Label Text="{Binding _Tag}"/>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
                             </VerticalStackLayout>
-                        </VerticalStackLayout>
-                    </Border>
-                    <Border Grid.Row="2">
-                        <VerticalStackLayout Margin="5,0,5,5">
-                            <Label Text="{Static helpers:Constants+Texts.LabelRecipes}" 
-                                   FontFamily="OpenSans-Semibold" 
-                                   FontSize="Medium"/>
-                            <Label Text="{Binding CookingProcess}"/>
-                        </VerticalStackLayout>
-                    </Border>
-                </Grid>
-            </ScrollView>
-        </Border>
+                        </Border>
+                        <Border Grid.Row="3">
+                            <VerticalStackLayout>
+                                <Label Text="{Static helpers:Constants+Texts.LabelRecipes}"
+                           FontFamily="OpenSans-Semibold" 
+                           FontSize="Medium"/>
+                                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Steps}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate x:DataType="models:Step">
+                                            <Border Margin="5,0,5,5">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="*"/>
+                                                        <RowDefinition Height="*"/>
+                                                    </Grid.RowDefinitions>
+                                                    <Image Source="{Binding Image}" Grid.Row="0"/>
+                                                    <Label Text="{Binding CookingProcess}" Grid.Row="1"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </VerticalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </ScrollView>
+            </Border>
+        </Grid>
     </Border>
 </ContentPage>

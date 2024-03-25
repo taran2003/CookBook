@@ -7,16 +7,16 @@ namespace CookBoock.Models
     {
         public Ingridients() 
         { 
-
+            _Ingridient = "";
         }
 
         public Ingridients(string ingridient)
         {
-            Ingridient = ingridient;
+            _Ingridient = ingridient;
         }
 
         private string ingridient;
-        public string Ingridient
+        public string _Ingridient
         {
             get => ingridient;
             set
@@ -29,7 +29,7 @@ namespace CookBoock.Models
         {
             var item = obj as Ingridients;
             if (item == null) return false;
-            return this.Ingridient.Equals(item.Ingridient);
+            return this._Ingridient.Equals(item._Ingridient);
         }
 
         bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)

@@ -38,6 +38,7 @@ namespace CookBoock.ViewModel
             {
                 Db.Close();
             });
+            //Db.ClearAll();
             DeleteItem = new Command<Recipe>(Delete);
             SearchCommand = new Command<string>(Search);
             RefreshCommand = new Command(refresh);

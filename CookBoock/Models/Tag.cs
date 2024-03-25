@@ -12,7 +12,7 @@ namespace CookBoock.Models
     {
         public Tag()
         {
-
+            _Tag = "";
         }
 
         public Tag(string tag)

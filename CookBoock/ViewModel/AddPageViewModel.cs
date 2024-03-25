@@ -1,32 +1,39 @@
-﻿using CookBoock.Data;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using CookBoock.Data;
+using CookBoock.Helpers;
 using CookBoock.Models;
+using NativeMedia;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using NativeMedia;
 using Constants = CookBoock.Helpers.Constants;
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
 
 namespace CookBoock.ViewModel
 {
     public class AddPageViewModel : INotifyPropertyChanged
     {
         private RecipeDB Db;
+        private StepDB StepDB;
         Recipe recipe;
         int Id { get; set; }
         public ICommand IngridientAdd { get; set; }
         public ICommand TagAdd { get; set; }
+        public ICommand StepAdd { get; set; }
         public ICommand IngridientRemoveCommand { get; set; }
         public ICommand TagsRemoveCommand { get; set; }
+        public ICommand StepsRemoveCommand { get; set; }
         public ICommand saveData { get; set; }
         public ICommand ImageLoad { get; set; }
-        Stream stream { get; set; }
+        public ICommand StepImageLoad { get; set; }
+        List<Stream> streams = new List<Stream>();
         public string title;
-        public string Title {
+        public string Title
+        {
             get => title;
-            set {
+            set
+            {
                 if (title != value)
                 {
                     title = value;
@@ -35,22 +42,23 @@ namespace CookBoock.ViewModel
             }
         }
         private ImageSource image;
-        public ImageSource Image 
-        { 
+        public ImageSource Image
+        {
             get => image;
-            set 
+            set
             {
                 if (image != value)
                 {
                     image = value;
                     OnPropertyChanged();
                 }
-            } 
+            }
         }
         public string name
         {
             get => recipe.Name;
-            set {
+            set
+            {
                 if (recipe.Name != value)
                 {
                     recipe.Name = value;
@@ -58,20 +66,21 @@ namespace CookBoock.ViewModel
                 }
             }
         }
-        public string cookingProcess
+        ObservableCollection<Step> steps;
+        public ObservableCollection<Step> Steps
         {
-            get => recipe.CookingProcess;
+            get => steps;
             set
             {
-                if (recipe.CookingProcess != value)
+                if (steps != value)
                 {
-                    recipe.CookingProcess = value;
+                    steps = value;
                     OnPropertyChanged();
                 }
             }
         }
         CancellationTokenSource cts = new CancellationTokenSource();
-        IMediaFile[] files = null;
+        List<IMediaFile> files = new List<IMediaFile>();
         public ObservableCollection<Ingridients> ingridients
         {
             get => recipe.Ingridients;
@@ -101,7 +110,6 @@ namespace CookBoock.ViewModel
         {
             Init();
             recipe = new Recipe();
-            stream = null;
             Title = Constants.Texts.TitleAdd;
             saveData = new Command(Save);
         }
@@ -110,15 +118,31 @@ namespace CookBoock.ViewModel
         {
             Init();
             Id = Convert.ToInt32(id);
-            recipe = Db.FindeById(Id);
-            Image = ImageSource.FromStream(() => Db.GetStream(recipe.FileId));
-            stream = null;
+            recipe = Db.GetById(Id);
+            Steps = recipe.Steps;
+            streams[0] = Db.FindImageById(recipe.FileId);
+            for (int i = 0; i < Steps.Count; i++)
+            {
+                streams.Add(Db.FindImageById(steps[i].FileId));
+                files.Add(null);
+            }
+            for (int i = 0; i < Steps.Count; i++)
+            {
+                steps[i].Image = null;
+                steps[i].Image = ImageSource.FromStream(() => streams[i + 1]);
+            }
+            Image = null;
+            Image = ImageSource.FromStream(() => streams[0]);
             Title = Constants.Texts.TitleRewrite;
             saveData = new Command(Update);
         }
         public void Init()
         {
             Db = new RecipeDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
+            StepDB = new StepDB(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Recipes.db"));
+            files.Add(null);
+            steps = new ObservableCollection<Step>();
+            streams.Add(null);
             IngridientAdd = new Command(() =>
             {
                 ingridients.Add(new Ingridients());
@@ -127,19 +151,36 @@ namespace CookBoock.ViewModel
             {
                 Tags.Add(new Tag());
             });
+            StepAdd = new Command(() =>
+            {
+                steps.Add(new Step());
+                files.Add(null);
+                streams.Add(null);
+
+            });
             IngridientRemoveCommand = new Command<Ingridients>(RemoveIngridient);
             TagsRemoveCommand = new Command<Tag>(RemoveTag);
+            StepsRemoveCommand = new Command<Step>(RemoveStep);
             ImageLoad = new Command(SetImage);
+            StepImageLoad = new Command<Step>(SetStepImage);
         }
 
         private async void Save()
         {
-            if (image != null && name.Trim(' ').Length != 0 && Tags.Count != 0 && ingridients.Count != 0 && cookingProcess.Trim().Length != 0)
+            if (image != null && name.Trim(' ').Length != 0 && Tags.Count != 0 && ingridients.Count != 0 && Steps.Count != 0)
             {
                 recipe.SetFileId();
-                stream = await files[0].OpenReadAsync();
-                Db.Add(recipe, stream);
-                stream.Close();
+                for (int i = 0; i < files.Count; i++)
+                {
+                    streams[i] = await files[i].OpenReadAsync();
+                }
+                recipe.Steps = Steps;
+                Db.Add(recipe, streams);
+                foreach (var stream in streams)
+                {
+                    stream.Close();
+                }
+                StepDB.Close();
                 Db.Close();
                 await Shell.Current.GoToAsync("..");
             }
@@ -156,30 +197,47 @@ namespace CookBoock.ViewModel
 
         private async void Update()
         {
-            if (files == null)
+            bool[] buf = new bool[files.Count];
+            for (int i = 0; i < files.Count; i++)
             {
-                stream = Db.GetStream(recipe.FileId);
+                if (files[i] != null)
+                {
+                    buf[i] = true;
+                }
             }
-            else
-            { 
-                stream = await files[0].OpenReadAsync();
+            for (int i = 0; i < files.Count; i++)
+            {
+                if (buf[i])
+                {
+                    streams[i] = await files[i].OpenReadAsync();
+                }
+                else
+                {
+                    if (i == 0)
+                    {
+                        streams[i] = Db.FindImageById(recipe.FileId);
+                    }
+                    else
+                    {
+                        streams[i] = Db.FindImageById(recipe.Steps[i-1].FileId);
+                    }
+                }
             }
-            Db.FullUpdate(recipe, stream);
-            stream.Close();
+            Db.FullUpdate(recipe, streams);
+            foreach (var stream in streams)
+            {
+                stream.Close();
+            }
             Db.Close();
         }
 
-        private void RemoveTag(Tag obj)
-        {
-            Tags.Remove(obj);
-        }
 
         private async void SetImage()
         {
             try
             {
                 var res = await MediaGallery.PickAsync(1, MediaFileType.Image);
-                files = res?.Files?.ToArray();
+                files[0] = res.Files.First();
             }
             catch (OperationCanceledException)
             {
@@ -193,15 +251,47 @@ namespace CookBoock.ViewModel
             {
                 cts.Dispose();
             }
-            if (files == null || files.Length == 0)
+            if (files == null || files.Count == 0)
             {
                 cts.Dispose();
-                return; 
+                return;
             }
-            stream = await files[0].OpenReadAsync();
+            streams[0] = await files[0].OpenReadAsync();
             Image = null;
 #if ANDROID
-            Image = ImageSource.FromStream(()=>stream);
+            Image = ImageSource.FromStream(()=>streams[0]);
+#endif
+        }
+
+        private async void SetStepImage(Step obj)
+        {
+            var index = steps.IndexOf(obj) + 1;
+            try
+            {
+                var res = await MediaGallery.PickAsync(1, MediaFileType.Image);
+                files[index] = res.Files.First();
+            }
+            catch (OperationCanceledException)
+            {
+                files = null;
+            }
+            catch (Exception)
+            {
+                files = null;
+            }
+            finally
+            {
+                cts.Dispose();
+            }
+            if (files == null || files.Count == 0)
+            {
+                cts.Dispose();
+                return;
+            }
+            streams[index] = await files[index].OpenReadAsync();
+            steps[index - 1].Image = null;
+#if ANDROID
+            steps[index - 1].Image = ImageSource.FromStream(() => streams[index]);
 #endif
         }
 
@@ -210,11 +300,24 @@ namespace CookBoock.ViewModel
             ingridients.Remove(obj);
         }
 
+        private void RemoveTag(Tag obj)
+        {
+            Tags.Remove(obj);
+        }
+
+        private void RemoveStep(Step obj)
+        {
+            var index = steps.IndexOf(obj)+1;
+            files.RemoveAt(index);
+            streams.RemoveAt(index);
+            Steps.Remove(obj);
+        }
+
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        
+
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

@@ -42,7 +42,7 @@ namespace CookBoock.ViewModel
 
         private void Delete(Recipe Item)
         {
-            Recipe recipe = Db.FindeById(Item.Id);
+            Recipe recipe = Db.GetById(Item.Id);
             recipe.RemoveFromCart();
             RecipesList.Remove(Item);
             Db.Update(recipe);

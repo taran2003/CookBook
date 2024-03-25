@@ -1,4 +1,4 @@
-namespace CookBoock.View;
+namespace CookBoock;
 
 public partial class User : ContentPage
 {

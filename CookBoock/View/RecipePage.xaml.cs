@@ -1,5 +1,4 @@
 using CookBoock.ViewModel;
-
 namespace CookBoock;
 
 [QueryProperty(nameof(ItemId), "ItemId")]
@@ -16,6 +15,10 @@ public partial class RecipePage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        if(_id != null)
+        {
+            BindingContext = viewModel = new RecipePageViewModel(ItemId);
+        }
     }
 
     private string _id;
