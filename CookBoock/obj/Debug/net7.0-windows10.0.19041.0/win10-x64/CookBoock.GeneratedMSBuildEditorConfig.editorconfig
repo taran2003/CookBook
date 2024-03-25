@@ -9,6 +9,8 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = CookBoock
 build_property.ProjectDir = D:\c#\Maui\CookBoock\CookBoock\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
 
 [D:/c\#/Maui/CookBoock/CookBoock/App.xaml]
 build_metadata.AdditionalFiles.GenKind = Xaml
