@@ -10,107 +10,149 @@
     <Shell.BackButtonBehavior>
         <BackButtonBehavior IconOverride="back.png"/>
     </Shell.BackButtonBehavior>
-    <Border Margin="-5,-2">
-        <ScrollView>
-            <VerticalStackLayout Margin="5,10">
-                <Label Text="{Static helpers:Constants+Texts.LabelName}" FontSize="Large"/>
-                <Border Stroke="{StaticResource Gray300}"
-                        StrokeShape="RoundRectangle 5">
-                    <Entry Text="{Binding name}" 
-                   Margin="0,0,0,0"
-                   Placeholder="{Static helpers:Constants+Texts.PlaseHolderName}"/>
-                </Border>
-                <Image Source="{Binding Image}" 
+    <Border Margin="-5,0">
+        <Grid>
+            <Image Source="{Static helpers:Constants+Images.BackGroundImage}"
+                   Aspect="AspectFill"
+                   HorizontalOptions="Start"/>
+            <ScrollView>
+                <VerticalStackLayout Margin="5,10">
+                    <Label Text="{Static helpers:Constants+Texts.LabelName}" FontSize="Large"/>
+                    <Border StrokeShape="RoundRectangle 5">
+                        <Entry Text="{Binding name}"
+                               Margin="0,0,0,0"
+                               Placeholder="{Static helpers:Constants+Texts.PlaseHolderName}"/>
+                    </Border>
+                    <Image Source="{Binding Image}" 
                               Margin="0,10,0,0"/>
-                <Button Text="{Static helpers:Constants+Texts.ButtonLoadImage}" 
+                    <Button Text="{Static helpers:Constants+Texts.ButtonLoadImage}" 
                         Command="{Binding ImageLoad}" 
                         Margin="0,10,0,0"/>
-                <VerticalStackLayout Margin="0,10,0,0">
-                    <HorizontalStackLayout >
-                        <Label Text="{Static helpers:Constants+Texts.LabelIngridients}" 
+                    <VerticalStackLayout Margin="0,10,0,0">
+                        <HorizontalStackLayout >
+                            <Label Text="{Static helpers:Constants+Texts.LabelIngridients}" 
                                FontSize="Large"/>
-                        <ImageButton Source="{Static helpers:Constants+Images.PlusIcon}" 
+                            <ImageButton Source="{Static helpers:Constants+Images.PlusIcon}" 
                                  HeightRequest="30"
                                  WidthRequest="30"
-                                 Command="{Binding ingridientAdd}" 
+                                 Command="{Binding IngridientAdd}" 
                                  Margin="10,0,10,0"/>
-                    </HorizontalStackLayout>
-                    <CollectionView x:Name="Ingridients" 
+                        </HorizontalStackLayout>
+                        <CollectionView x:Name="Ingridients" 
                             SelectionMode="None"
                             ItemsSource="{Binding ingridients}">
-                        <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Vertical"/>
-                        </CollectionView.ItemsLayout>
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:Ingridients">
-                                <Grid
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Vertical"/>
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:Ingridients">
+                                    <Grid
                                 Margin="0,10,0,0" 
                                 ColumnDefinitions="*,Auto">
-                                    <Border StrokeShape="RoundRectangle 5">
-                                        <Entry Text="{Binding Ingridient}" 
+                                        <Border StrokeShape="RoundRectangle 5">
+                                            <Entry Text="{Binding _Ingridient}" 
                                        Grid.Column="0"
                                        Placeholder="{Static helpers:Constants+Texts.PlaseHolderIngridient}"/>
-                                    </Border>
-                                    <ImageButton Source="{Static helpers:Constants+Images.RemoveIcon}" 
+                                        </Border>
+                                        <ImageButton Source="{Static helpers:Constants+Images.RemoveIcon}" 
                                                  HeightRequest="45"
                                                  WidthRequest="45"
                                                  Grid.Column="1"
                                                  Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:AddPageViewModel}}, 
                                                                    Path=IngridientRemoveCommand}"
                                                  CommandParameter="{Binding .}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                    <HorizontalStackLayout >
-                        <Label Text="{Static helpers:Constants+Texts.LabelTags}" 
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                        <HorizontalStackLayout >
+                            <Label Text="{Static helpers:Constants+Texts.LabelTags}" 
                                FontSize="Large"/>
-                        <ImageButton Source="{Static helpers:Constants+Images.PlusIcon}" 
+                            <ImageButton Source="{Static helpers:Constants+Images.PlusIcon}" 
                                      HeightRequest="30"
                                      WidthRequest="30"
                                      Command="{Binding TagAdd}" 
                                      Margin="10,0,10,0"/>
-                    </HorizontalStackLayout>
-                    <CollectionView SelectionMode="None"
-                                        ItemsSource="{Binding tags}">
-                        <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Vertical"/>
-                        </CollectionView.ItemsLayout>
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:Tag">
-                                <Grid
+                        </HorizontalStackLayout>
+                        <CollectionView SelectionMode="None"
+                                        ItemsSource="{Binding Tags}">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Vertical"/>
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:Tag">
+                                    <Grid
                                         Margin="0,10,0,0" 
                                         ColumnDefinitions="*,Auto">
-                                    <Border StrokeShape="RoundRectangle 5">
-                                        <Entry Text="{Binding Tag}" 
+                                        <Border StrokeShape="RoundRectangle 5">
+                                            <Entry Text="{Binding _Tag}" 
                                                    Grid.Column="0"
                                                    Placeholder="{Static helpers:Constants+Texts.PlaseHolderTag}"/>
-                                    </Border>
-                                    <ImageButton Source="{Static helpers:Constants+Images.RemoveIcon}" 
+                                        </Border>
+                                        <ImageButton Source="{Static helpers:Constants+Images.RemoveIcon}" 
                                                      HeightRequest="45"
                                                      WidthRequest="45"
                                                      Grid.Column="1"
                                                      Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:AddPageViewModel}}, 
                                                                    Path=TagsRemoveCommand}"
                                                      CommandParameter="{Binding .}"/>
-                                </Grid>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                        <HorizontalStackLayout >
+                            <Label Text="{Static helpers:Constants+Texts.LabelSteps}" 
+                               FontSize="Large"/>
+                            <ImageButton Source="{Static helpers:Constants+Images.PlusIcon}" 
+                                     HeightRequest="30"
+                                     WidthRequest="30"
+                                     Command="{Binding StepAdd}" 
+                                     Margin="10,0,10,0"/>
+                        </HorizontalStackLayout>
+                        <CollectionView x:Name="Steps" 
+                              SelectionMode="None"
+                              ItemsSource="{Binding Steps}">
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Vertical"/>
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:Step">
+                                    <Grid Margin="0,10,0,0" 
+                                      ColumnDefinitions="*,Auto"
+                                      RowDefinitions="Auto, *, *">
+                                        <Image Source="{Binding Image}" 
+                                           Margin="0,10,0,0"
+                                           Grid.ColumnSpan="2"
+                                           Grid.Row="0"/>
+                                        <Button Text="{Static helpers:Constants+Texts.ButtonLoadImage}" 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:AddPageViewModel}},
+                                            Path=StepImageLoad}" 
+                                            Margin="0,10,0,0"
+                                            CommandParameter="{Binding .}"
+                                            Grid.ColumnSpan="2"
+                                            Grid.Row="1"/>
+                                        <Border StrokeShape="RoundRectangle 5" Grid.Row="2">
+                                            <Editor Text="{Binding CookingProcess}" 
+                                               Grid.Column="0"
+                                               Placeholder="{Static helpers:Constants+Texts.PlaseHolderStep}"
+                                                    PlaceholderColor="Black"/>
+                                        </Border>
+                                        <ImageButton Source="{Static helpers:Constants+Images.RemoveIcon}" 
+                                                 HeightRequest="45"
+                                                 WidthRequest="45"
+                                                 Grid.Row="2"
+                                                 Grid.Column="1"
+                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:AddPageViewModel}}, 
+                                                 Path=StepsRemoveCommand}"
+                                                 CommandParameter="{Binding .}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                    <Button Text="{Static helpers:Constants+Texts.ButtonSave}" Command="{Binding saveData}" Clicked="GoBack"/>
                 </VerticalStackLayout>
-                <Label Text="{Static helpers:Constants+Texts.LabelRecipes}" 
-                       FontSize="Large" 
-                       Margin="0,10,0,0"/>
-                <Grid>
-                    <Border Stroke="{StaticResource Gray300}"
-                            StrokeShape="RoundRectangle 5">
-                        <Editor Text="{Binding cookingProcess}" 
-                            AutoSize="TextChanges"
-                            Placeholder="{Static helpers:Constants+Texts.PlaseHolderRecipe}"/>
-                    </Border>
-                </Grid>
-                <Button Text="{Static helpers:Constants+Texts.ButtonSave}" Command="{Binding saveData}" Clicked="GoBack"/>
-            </VerticalStackLayout>
-        </ScrollView>
+            </ScrollView>
+        </Grid>
     </Border>
 </ContentPage>

@@ -84,7 +84,6 @@ namespace CookBoock.ViewModel
             {
                 Name = recipe.Name;
                 Ingridients = recipe.Ingridients;
-                CookingProcess = recipe.CookingProcess;
                 Image = recipe.Image;
                 Height = Image.Height;
                 Width = Image.Width;

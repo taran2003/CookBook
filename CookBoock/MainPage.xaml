@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
@@ -9,47 +9,52 @@
              x:DataType="viewModels:MainPageViewModel"
              Title="{Static helpers:Constants+Texts.TitleMain}">
     <Page.Behaviors>
-        <mct:StatusBarBehavior StatusBarColor="{StaticResource Gray50}"/>
+        <mct:StatusBarBehavior StatusBarColor="{StaticResource Secondary}"/>
     </Page.Behaviors>
-    <Border Margin="-5,-2">
-        <ScrollView>
-            <VerticalStackLayout Margin="0,10">
-                <CollectionView x:Name="RecipeList" 
+    <Border Margin="-5,0">
+        <Grid>
+            <Image Source="{Static helpers:Constants+Images.BackGroundImage}"
+                   Aspect="AspectFill"
+                   HorizontalOptions="Start"/>
+            <ScrollView>
+                <VerticalStackLayout Margin="0,10">
+                    <CollectionView x:Name="RecipeList" 
                             SelectionMode="None"
                             ItemsSource="{Binding RecipesList}"
                             RemainingItemsThresholdReached="RecipeList_RemainingItemsThresholdReached"
                             RemainingItemsThreshold="3">
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Vertical"/>
-                    </CollectionView.ItemsLayout>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="models:Recipe">
-                            <Border Margin="5,0">
-                                <Border.GestureRecognizers>
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Vertical"/>
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Recipe">
+                                <Border Margin="5,0">
+                                    <Border.GestureRecognizers>
 
-                                    <TapGestureRecognizer 
+                                        <TapGestureRecognizer 
                                         Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}, Path=SelectRecipeCommand}" 
                                         CommandParameter="{Binding .}"/>
-                                </Border.GestureRecognizers>
-                                <Grid Margin="0,5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="4*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <GraphicsView HeightRequest="50"
+                                    </Border.GestureRecognizers>
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="4*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <GraphicsView HeightRequest="50"
                                        WidthRequest="50" 
                                        Drawable="{Binding Image}"
                                        Grid.Column="0"/>
-                                    <Label Text="{Binding Name}"
+                                        <Label Text="{Binding Name}"
                                        FontSize="Medium"
                                        Grid.Column="1"/>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </VerticalStackLayout>
-        </ScrollView>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
     </Border>
 </ContentPage>

@@ -15,14 +15,17 @@
         <Tab x:Name="Home" 
              Title="{Static helpers:Constants+Texts.TitleMain}" 
              Icon="{Static helpers:Constants+Images.HomeIcon}">
-            <ShellContent
-            Title="Home"
+            <ShellContent Title="Home"
             ContentTemplate="{DataTemplate local:MainPage}"
             Route="MainPage" />
         </Tab>
         <Tab Title="{Static helpers:Constants+Texts.TitleCart}" 
              Icon="{Static helpers:Constants+Images.ShopListIcon}">
             <ShellContent ContentTemplate="{DataTemplate local:ShopList}"/>
+        </Tab>
+        <Tab Title="{Static helpers:Constants+Texts.TitleUser}" 
+             Icon="{Static helpers:Constants+Images.UserIcon}">
+            <ShellContent ContentTemplate="{DataTemplate local:User}"/>
         </Tab>
     </TabBar>
 </Shell>

@@ -1,5 +1,4 @@
-﻿using Android.App;
-using CookBoock.Helpers;
+﻿using CookBoock.Helpers;
 using CookBoock.Models;
 using RestSharp;
 using System.Collections.ObjectModel;
@@ -83,7 +82,7 @@ namespace CookBoock.Data
             recipe.Name = result.name;
             foreach (var item1 in result.instructions)
             {
-                recipe.CookingProcess += item1.display_text;
+                //recipe.CookingProcess += item1.display_text;
             }
             var bufList = new ObservableCollection<Ingridients>();
             foreach (var item1 in result.sections) 

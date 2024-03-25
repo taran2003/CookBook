@@ -32,7 +32,7 @@
                             <VerticalStackLayout BindableLayout.ItemsSource="{Binding Ingridients}">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate x:DataType="models:Ingridients">
-                                        <Label Text="{Binding Ingridient}"/>
+                                        <Label Text="{Binding _Ingridient}"/>
                                     </DataTemplate>
                                 </BindableLayout.ItemTemplate>
                             </VerticalStackLayout>

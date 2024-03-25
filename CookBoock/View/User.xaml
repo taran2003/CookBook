@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="CookBoock.View.User"
+             xmlns:viewModels="clr-namespace:CookBoock.ViewModel"
+             xmlns:helpers="clr-namespace:CookBoock.Helpers"
+             x:Class="CookBoock.User"
+             x:DataType="viewModels:User"
              Title="User">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <Border Margin="-5,0">
+        <Grid>
+            <Image Source="{Static helpers:Constants+Images.BackGroundImage}"
+           Aspect="AspectFill"
+           HorizontalOptions="Start"/>
+            <VerticalStackLayout VerticalOptions="Center" Margin="15,0">
+                <Button Text="{Static helpers:Constants+Texts.ButtonLogIn}"/>
+            </VerticalStackLayout>
+        </Grid>
+    </Border>
 </ContentPage>

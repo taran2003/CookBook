@@ -14,6 +14,8 @@
             public const string RemoveIcon = "remove.png";
             public const string SearchIcon = "search.png";
             public const string TrashCanIcon = "trash.png";
+            public const string UserIcon = "user.png";
+            public const string BackGroundImage = "back_graund.png";
         }
     }
 }

@@ -45,5 +45,19 @@ namespace CookBoock.Helpers
             image = image.Downsize(500, true);
             return image;
         }
+
+        public static void ClearImageCashe()
+        {
+            var imageManagerDiskCache = Path.Combine(FileSystem.CacheDirectory, "image_manager_disk_cache");
+
+            if (Directory.Exists(imageManagerDiskCache))
+            {
+                foreach (var imageCacheFile in Directory.EnumerateFiles(imageManagerDiskCache))
+                {
+                    File.Delete(imageCacheFile);
+                }
+            }
+        }
+
     }
 }
